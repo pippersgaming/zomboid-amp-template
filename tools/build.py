@@ -1,0 +1,567 @@
+import csv
+import json
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+DATA = ROOT / "data" / "settings.csv"
+NAME = "project-zomboid-plus"
+
+TABS = {
+    "Server": "Server:dns",
+    "Players": "Players:group",
+    "World": "World:public",
+    "Survival": "Survival:backpack",
+}
+
+SECTIONS = {
+    "Start here": ("Server", "rocket_launch", 1),
+    "Joining and access": ("Server", "login", 2),
+    "Network and server listing": ("Server", "lan", 3),
+    "Mods and map": ("Server", "extension", 4),
+    "Saving, backups and resets": ("Server", "save", 5),
+    "Performance": ("Server", "speed", 6),
+    "Discord and webhooks": ("Server", "forum", 7),
+    "Remote admin (RCON)": ("Server", "terminal", 8),
+    "Anti-cheat and moderation": ("Server", "gavel", 9),
+    "Logging": ("Server", "description", 10),
+    "Java and startup": ("Server", "memory", 11),
+    "Players and characters": ("Players", "person", 1),
+    "Safehouses and factions": ("Players", "home", 2),
+    "PvP and safety": ("Players", "shield", 3),
+    "Chat and voice": ("Players", "chat", 4),
+    "Zombies: population and respawn": ("World", "groups", 1),
+    "Zombies: behaviour": ("World", "directions_run", 2),
+    "Sandbox control and presets": ("World", "tune", 0),
+    "World and time": ("World", "schedule", 3),
+    "Weather and nature": ("World", "cloud", 4),
+    "Utilities": ("World", "bolt", 5),
+    "Map and navigation": ("World", "map", 6),
+    "Story and events": ("World", "auto_stories", 7),
+    "Loot and items": ("Survival", "inventory_2", 1),
+    "Vehicles": ("Survival", "directions_car", 2),
+    "Farming, animals and food": ("Survival", "agriculture", 3),
+    "Character and skills": ("Survival", "school", 4),
+    "Health and combat": ("Survival", "healing", 5),
+    "Not used by the game in 42.21": ("Survival", "block", 99),
+}
+
+NOT_USED = "Not used by the game in 42.21"
+
+GAME_MANAGED = {"ResetID", "ServerPlayerID"}
+PORT_FIELDS = {"DefaultPort": "$GamePort", "UDPPort": "$DirectPort", "RCONPort": "$RCONPort"}
+SECRET_KEYS = {"Password", "RCONPassword", "DiscordToken"}
+REQUIRED_INI = {"Map"}
+NON_LITERAL_DEFAULT = re.compile(r"random|made by the server", re.I)
+
+
+def section(name):
+    tab, icon, order = SECTIONS[name]
+    return TABS[tab], f"{name}:{icon}:{order}"
+
+
+def readable(key):
+    words = re.sub(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])", " ", key).replace("_", " ")
+    return words[0].upper() + words[1:]
+
+
+def plain_label(r):
+    label = r["game_label"]
+    if not label or "(the Host screen shows the key name)" in label:
+        label = readable(r["table_path"].split(".")[-1])
+    return label
+
+
+def display_name(r):
+    label = plain_label(r)
+    if r["table_path"].startswith("SandboxVars.ZombieLore.") and "zombie" not in label.lower():
+        label = "Zombie " + label[0].lower() + label[1:]
+    tags = []
+    if "New world only" in r["danger_labels"]:
+        tags.append("new world only")
+    if "Can wipe or reset" in r["danger_labels"]:
+        tags.append("can wipe or reset")
+    if r["table_path"].startswith("SandboxVars.MultiplierConfig.") and "multiplier" not in label.lower():
+        label += " XP multiplier"
+    if tags:
+        label += " (" + ", ".join(tags) + ")"
+    return label
+
+
+def description(r):
+    explanation = r["plain_explanation"].strip()
+    said = explanation.lower()
+    parts = [explanation]
+    danger = r["danger_labels"]
+    if "Unvisited areas only" in danger and "visited" not in said and "explored" not in said:
+        parts.append("Only affects places nobody has visited yet; explored areas keep what they had.")
+    if "New world only" in danger and "new world" not in said:
+        parts.append("Only used when a new world is created. Changing it later does nothing.")
+    if "Can wipe or reset" in danger:
+        parts.append("Careful: changing this can make players lose or restart their local data.")
+    if "No effect in 42.21" in danger and "no code" not in said:
+        parts.append("No code in game version 42.21 reads this setting, so changing it does nothing.")
+    if r["recommended_for"]:
+        parts.append(r["recommended_for"].strip())
+    presets = preset_line(r)
+    if presets:
+        parts.append(presets)
+    note = r["verification"]
+    if "unverified:" in note:
+        parts.append("Not fully confirmed in the game code: " + note.split("unverified:", 1)[1].strip())
+    parts.append(f"Game setting: {r['table_path'].replace('SandboxVars.', '')}.")
+    return " ".join(p for p in parts if p)
+
+
+PRESETS = [("Apocalypse", "Apocalypse"), ("Outbreak", "Outbreak"), ("Rising", "Rising"),
+           ("Extinction", "Extinction"), ("SixMonthsLater", "Six Months Later")]
+
+
+def shown_value(r, value):
+    if r["type"] == "boolean":
+        return "on" if value.lower() == "true" else "off"
+    if r["type"] == "choice" and "=" in r["choices"]:
+        return parse_choices(r["choices"]).get(value, value)
+    return value
+
+
+def preset_line(r):
+    if r["file"] != "SandboxVars" or not r["preset_Apocalypse"]:
+        return ""
+    values = [(label, r[f"preset_{key}"]) for key, label in PRESETS]
+    if len({v for _, v in values}) == 1:
+        return f"Same in all five game presets: {shown_value(r, values[0][1])}."
+    return "Game presets: " + ", ".join(f"{label} {shown_value(r, v)}" for label, v in values) + "."
+
+
+def number(text):
+    text = text.split(" ")[0]
+    value = float(text)
+    return int(value) if value.is_integer() else value
+
+
+def parse_choices(text):
+    out = {}
+    for part in text.split("; "):
+        value, label = part.split("=", 1)
+        out[value.strip()] = label.strip()[0].upper() + label.strip()[1:]
+    return out
+
+
+def default_value(r):
+    d = r["default"]
+    if NON_LITERAL_DEFAULT.search(d):
+        return ""
+    return d
+
+
+def base_field(r, field_name, param, tab, sub):
+    return {
+        "DisplayName": display_name(r),
+        "Category": tab,
+        "Subcategory": sub,
+        "Description": description(r),
+        "Keywords": ",".join(dict.fromkeys(
+            [r["key"].split(".")[-1].lower()] + re.findall(r"[a-z]{3,}", plain_label(r).lower()))),
+        "FieldName": field_name,
+        "ParamFieldName": param,
+        "IncludeInCommandLine": False,
+    }
+
+
+def typed(field, r, is_sandbox):
+    t = r["type"]
+    d = default_value(r)
+    if t == "boolean":
+        field["InputType"] = "checkbox"
+        field["EnumValues"] = {"False": "false", "True": "true"}
+        field["DefaultValue"] = d.lower()
+    elif t == "choice" and "=" in r["choices"]:
+        field["InputType"] = "enum"
+        field["EnumValues"] = parse_choices(r["choices"])
+        field["DefaultValue"] = d
+    elif t in ("integer", "decimal", "choice"):
+        field["InputType"] = "number"
+        if r["min"]:
+            field["MinValue"] = number(r["min"])
+        if r["max"] and "no real limit" not in r["max"]:
+            field["MaxValue"] = number(r["max"])
+        field["DefaultValue"] = d
+    elif t == "text":
+        field["InputType"] = "Textarea"
+        field["DefaultValue"] = d
+    else:
+        field["InputType"] = "Password" if r["key"] in SECRET_KEYS else "text"
+        field["DefaultValue"] = d
+    if is_sandbox and field["InputType"] in ("number", "enum"):
+        field["Required"] = True
+    return field
+
+
+def setting_fields(rows):
+    fields, lua_lines = [], []
+    for r in rows:
+        key = r["key"]
+        is_sandbox = r["file"] == "SandboxVars"
+        group = NOT_USED if "No effect in 42.21" in r["danger_labels"] else r["group"]
+        tab, sub = section(group)
+        if not is_sandbox and key in GAME_MANAGED:
+            continue
+        if not is_sandbox and key in PORT_FIELDS:
+            fields.append({
+                "DisplayName": key, "Category": tab, "Subcategory": sub,
+                "Description": "Set from the ports AMP gives this instance.",
+                "FieldName": PORT_FIELDS[key], "ParamFieldName": key,
+                "InputType": "hidden", "IncludeInCommandLine": False, "DefaultValue": r["default"],
+            })
+            continue
+        if not is_sandbox and key == "MaxPlayers":
+            f = typed(base_field(r, "$MaxUsers", "MaxPlayers", tab, sub), r, False)
+            fields.append(f)
+            continue
+        if is_sandbox:
+            path = r["table_path"].replace("SandboxVars.", "")
+            field_name = "SV_" + path.replace(".", "_")
+            f = typed(base_field(r, field_name, field_name, tab, sub), r, True)
+            if f["InputType"] == "text":
+                lua_lines.append(f"SandboxVars.{path} = [==[{{{{{field_name}}}}}]==]")
+            else:
+                lua_lines.append(f"SandboxVars.{path} = {{{{{field_name}}}}}")
+        else:
+            f = typed(base_field(r, key, key, tab, sub), r, False)
+            if key in REQUIRED_INI:
+                f["Required"] = True
+        fields.append(f)
+    return fields, lua_lines
+
+
+def ini_starter(rows):
+    lines = []
+    for r in rows:
+        if r["file"] != "ini" or r["key"] in GAME_MANAGED:
+            continue
+        lines.append(f"{r['key']}={default_value(r)}")
+    return "\n".join(lines) + "\n"
+
+
+def template_fields():
+    tab, start = section("Start here")
+    _, java = section("Java and startup")
+    _, rcon = section("Remote admin (RCON)")
+    _, mods = section("Mods and map")
+    world, presets = section("Sandbox control and presets")
+    return [
+        {
+            "DisplayName": "Show players in AMP",
+            "Category": tab, "Subcategory": start, "Order": 6,
+            "Description": (
+                "Build 42 no longer prints joins and leaves to the console, so AMP shows 0 players. "
+                "This is on by default: the server starts with the game's detailed log, which prints a line for each join and leave. "
+                "AMP then shows who is online, the kick and ban buttons work, and AMP's 'last player leaves' tasks work. "
+                "The detailed log also prints player IP addresses and RCON passwords; this template hides both in AMP's console, "
+                "but the game's own server-console.txt file still has them, so only give file access to people you trust. "
+                "It also adds some extra lines to the console."
+            ),
+            "Keywords": "players,online,count,tracking,join,leave,debuglog",
+            "FieldName": "PlayerTracking", "ParamFieldName": "PlayerTracking",
+            "InputType": "checkbox", "IncludeInCommandLine": False, "DefaultValue": "-debuglog=DetailedInfo",
+            "EnumValues": {"False": "", "True": "-debuglog=DetailedInfo"},
+        },
+        {
+            "DisplayName": "Mod update warning",
+            "Category": tab, "Subcategory": mods, "Order": 4,
+            "Description": (
+                "Sent to everyone in game whenever the server reports that a Workshop mod has an update. "
+                "The server only checks when it is told to: in AMP, open Schedule and add a task that sends the console command "
+                "checkModsNeedUpdate every 10 or 15 minutes. Then restart when it suits you (players with the new version cannot join "
+                "until the server restarts). Leave empty to send no message."
+            ),
+            "Keywords": "mod,update,workshop,warning,restart,checkmodsneedupdate",
+            "FieldName": "ModUpdateMessage", "ParamFieldName": "ModUpdateMessage",
+            "InputType": "text", "IncludeInCommandLine": False,
+            "DefaultValue": "A mod has been updated. The server will restart soon to install it.",
+        },
+        {
+            "DisplayName": "Apply a game preset at next start",
+            "Category": world, "Subcategory": presets, "Order": 2,
+            "Description": (
+                "Loads one of the game's own sandbox presets, the same ones single player offers, at the next start. "
+                "Each sandbox setting's help lists its value in every preset, so you can see what changes. "
+                "The preset is applied once, when you change this. Any sandbox box you change at the same time still wins over the preset. "
+                "AMP cannot read the result back, so AMP's sandbox boxes keep showing their old values. "
+                "To apply the same preset again later, set None, start once, then pick it again. "
+                "Settings marked 'new world only' only take effect on a new world. "
+                "Works with 'Last change wins', the default in 'Sandbox changes made in game' above."
+            ),
+            "Keywords": "preset,apocalypse,outbreak,rising,extinction,six months later,sandbox",
+            "FieldName": "SandboxPreset", "ParamFieldName": "SandboxPreset",
+            "InputType": "enum", "IncludeInCommandLine": False, "DefaultValue": "none",
+            "EnumValues": {"none": "None", "Apocalypse": "Apocalypse (game default)", "Outbreak": "Outbreak",
+                           "Rising": "Rising", "Extinction": "Extinction", "SixMonthsLater": "Six Months Later"},
+        },
+        {
+            "DisplayName": "Admin password",
+            "Category": tab, "Subcategory": start, "Order": 1,
+            "Description": (
+                "Start here. Set this before the first start: the server will not start while it is empty. "
+                "It is the password for the in-game admin account (the username below), not the password players use to join. "
+                "The game resets the admin account to this password at every start, so this box is always the real password. "
+                "Change settings here, not in the game's files. AMP rewrites the files from these boxes at every start. "
+                "Each box saves when you click away from it and takes effect at the next start, so changing one while the server runs is safe. "
+                "Sandbox settings can also be changed in the game's admin menu: see 'Sandbox changes made in game' at the top of the World tab. "
+                "Mods' own sandbox settings are not in AMP: change those in the game's admin menu, and they are kept."
+            ),
+            "Keywords": "admin,password,adminpassword,start,first",
+            "FieldName": "adminpassword", "ParamFieldName": "adminpassword",
+            "InputType": "Password", "Required": True,
+            "IncludeInCommandLine": True, "SkipIfEmpty": True, "DefaultValue": "",
+        },
+        {
+            "DisplayName": "Admin username",
+            "Category": tab, "Subcategory": start, "Order": 2,
+            "Description": "The name of the in-game admin account. The game creates it on the first start.",
+            "Keywords": "admin,username,adminusername",
+            "FieldName": "adminusername", "ParamFieldName": "adminusername",
+            "InputType": "text", "Required": True,
+            "IncludeInCommandLine": True, "SkipIfEmpty": True, "DefaultValue": "admin",
+        },
+        {
+            "DisplayName": "Server save name (careful)",
+            "Category": tab, "Subcategory": start, "Order": 3,
+            "Description": (
+                "The name the game uses for this server's settings files and world. "
+                "Changing it starts a brand new world with fresh settings files; the old world stays on disk under its old name. "
+                "Use letters, numbers, dashes or underscores only."
+            ),
+            "Keywords": "server,name,servername,world,save",
+            "FieldName": "servername", "ParamFieldName": "servername",
+            "InputType": "text", "Required": True,
+            "IncludeInCommandLine": True, "SkipIfEmpty": True, "DefaultValue": "servertest",
+        },
+        {
+            "DisplayName": "Memory limit",
+            "Category": tab, "Subcategory": start, "Order": 4,
+            "Description": (
+                "The most memory (RAM) the server may use. The game's default memory manager (ZGC) grows towards this limit "
+                "even when it does not need it, so leave room for the rest of the machine. "
+                "A vanilla server runs in 4096 MB; servers with many mods often need 6144 to 8192 MB."
+            ),
+            "Keywords": "memory,ram,xmx,limit,heap",
+            "FieldName": "MaxMemory", "ParamFieldName": "MaxMemory",
+            "InputType": "number", "MinValue": 2048, "MaxValue": 65536, "Suffix": "MB",
+            "Required": True, "IncludeInCommandLine": False, "DefaultValue": "4096",
+        },
+        {
+            "DisplayName": "Sandbox changes made in game",
+            "Category": world, "Subcategory": presets, "Order": 1,
+            "Description": (
+                "Who wins when a sandbox setting (zombies, loot, world and so on) is changed both here and in the game's admin menu. "
+                "Last change wins: at each start, only the boxes you changed here since the last start are applied; everything else keeps the game's value, "
+                "including changes made in game. "
+                "AMP always wins: every sandbox box is applied at each start, so in-game changes last until the next restart. "
+                "Mods' own sandbox settings are always kept, whichever you pick. "
+                "To make these boxes show what the game is really using (after changes in game, or after bringing in an existing world): "
+                "start the server once, then in the File Manager right click Zomboid/Server/<server save name>_SandboxImport.ini and choose Import. "
+                "That file is refreshed at every start. "
+                "An existing world is safe: on its first start here, nothing from AMP is applied to it until you import or change a box."
+            ),
+            "Keywords": "sandbox,in game,admin menu,sync,control,overwrite",
+            "FieldName": "SandboxControl", "ParamFieldName": "SandboxControl",
+            "InputType": "enum", "IncludeInCommandLine": False, "DefaultValue": "both",
+            "EnumValues": {"both": "Last change wins (AMP or game)", "amp": "AMP always wins"},
+        },
+        {
+            "DisplayName": "Memory manager (Java garbage collector)",
+            "Category": tab, "Subcategory": java, "Order": 1,
+            "Description": "ZGC is what the game's own launcher uses on Windows 10 and later. G1GC uses less memory up front and suits older systems.",
+            "Keywords": "java,gc,zgc,g1gc,garbage,collector",
+            "FieldName": "JavaGC", "ParamFieldName": "JavaGC",
+            "InputType": "enum", "IncludeInCommandLine": False, "DefaultValue": "-XX:+UseZGC",
+            "EnumValues": {"-XX:+UseZGC": "ZGC (game default)", "-XX:+UseG1GC": "G1GC"},
+        },
+        {
+            "DisplayName": "Extra Java options",
+            "Category": tab, "Subcategory": java, "Order": 2,
+            "Description": "Added to the Java part of the start command. Leave empty unless a guide tells you what to add.",
+            "Keywords": "java,arguments,options,jvm",
+            "FieldName": "CustomJavaArgs", "ParamFieldName": "CustomJavaArgs",
+            "InputType": "text", "IncludeInCommandLine": False, "DefaultValue": "",
+        },
+        {
+            "DisplayName": "Extra server options",
+            "Category": tab, "Subcategory": java, "Order": 3,
+            "Description": "Added to the end of the start command, for example -ip 192.168.1.10 to bind one network address. Leave empty unless you need it.",
+            "Keywords": "server,arguments,options,ip",
+            "FieldName": "CustomServerArgs", "ParamFieldName": "CustomServerArgs",
+            "InputType": "text", "IncludeInCommandLine": False, "DefaultValue": "",
+        },
+        {
+            "DisplayName": "RCON from this machine only",
+            "Category": tab, "Subcategory": rcon, "Order": 1,
+            "Description": (
+                "RCON lets tools send admin commands to the server. It only runs when an RCON password is set below. "
+                "When this is on, RCON only accepts connections from the server machine itself, so it cannot be reached from the internet. "
+                "Turn it off only if a tool on another machine needs RCON."
+            ),
+            "Keywords": "rcon,local,loopback,security",
+            "FieldName": "RconLocalOnly", "ParamFieldName": "RconLocalOnly",
+            "InputType": "checkbox", "IncludeInCommandLine": False, "DefaultValue": "-Drconlo=true",
+            "EnumValues": {"False": "", "True": "-Drconlo=true"},
+        },
+        {
+            "DisplayName": "Game version",
+            "Category": "Updates", "Subcategory": "Project Zomboid:download:1", "Order": 1,
+            "Description": (
+                "Build 42 is the game's normal Steam version. Unstable gets test builds first; players must be on the same version to join. "
+                "After changing this, stop the server, click Update, then start it. "
+                "Build 41 worlds do not load in Build 42. "
+                "Mods do not go in AMP's own Steam Workshop box on this page: that box causes a Steam login loop. "
+                "Add mods in Configuration, Server, Mods and map."
+            ),
+            "Keywords": "branch,beta,unstable,version,build,update,workshop",
+            "FieldName": "GameBranch", "ParamFieldName": "GameBranch",
+            "InputType": "enum", "IncludeInCommandLine": False, "DefaultValue": "public",
+            "EnumValues": {"public": "Build 42 (normal)", "unstable": "Build 42 unstable (test builds)"},
+        },
+    ]
+
+
+def mods_notes(fields):
+    notes = {
+        "Mods": (
+            "The mod IDs to load, separated by semicolons, for example ModA;ModB. "
+            "Each mod also needs its Workshop item number in the box below, or nothing loads. "
+            "One Workshop item can hold several mod IDs; list each one you want. "
+            "A backslash before an ID (\\ModA) is optional: the game removes backslashes before reading this list."
+        ),
+        "WorkshopItems": (
+            "The Steam Workshop item numbers, separated by semicolons, for example 2392709985;2169435993. "
+            "The number is at the end of the mod's Workshop page address. The game downloads these itself at start. "
+            "Do not use AMP's own Steam Workshop box on the Updates page."
+        ),
+        "Map": (
+            "The map folders to load, separated by semicolons. Map mods go first and Muldraugh, KY goes last, "
+            "for example MapModA;Muldraugh, KY. This box must not be empty."
+        ),
+        "WebhookAddress": (
+            "A web address the server posts short messages to: when a player joins or leaves, anti-cheat reports, "
+            "and when the server is opened or closed. It works with a Discord webhook with no bot: in Discord, open the channel's "
+            "settings, Integrations, Webhooks, New Webhook, Copy Webhook URL, then paste it here and add /slack to the end."
+        ),
+    }
+    for f in fields:
+        if f.get("ParamFieldName") in notes:
+            f["Description"] = notes[f["ParamFieldName"]]
+            f["Order"] = {"Mods": 1, "WorkshopItems": 2, "Map": 3, "WebhookAddress": 1}[f["ParamFieldName"]]
+
+
+PRESET_LUA = (
+    'do local p = "{{SandboxPreset}}"; if p ~= "none" then '
+    'for _, n in ipairs({ "Apocalypse", p }) do '
+    'local ok, t = pcall(require, "Sandbox/" .. n); '
+    'if ok and type(t) == "table" then for k, v in pairs(t) do '
+    'if type(v) == "table" then SandboxVars[k] = SandboxVars[k] or {}; '
+    'for k2, v2 in pairs(v) do SandboxVars[k][k2] = v2 end '
+    'elseif k ~= "VERSION" and k ~= "Version" then SandboxVars[k] = v end '
+    'end end end end end'
+)
+SANDBOX_STARTER ="SandboxVars = {\n    VERSION = 6,\n}\n"
+
+
+def prestart_stages(rows):
+    server_dir = f"./{NAME}/380870/Zomboid/Server"
+    return [
+        {
+            "UpdateStageName": "Create settings folder",
+            "UpdateSourcePlatform": "All",
+            "UpdateSource": "CreateDirectory",
+            "UpdateSourceArgs": server_dir,
+            "SkipOnFailure": False,
+        },
+        {
+            "UpdateStageName": "Create server settings file if missing",
+            "UpdateSourcePlatform": "All",
+            "UpdateSource": "CreateFile",
+            "UpdateSourceArgs": server_dir + "/{{servername}}.ini",
+            "UpdateSourceData": ini_starter(rows),
+            "OverwriteExistingFiles": False,
+            "SkipOnFailure": False,
+        },
+        {
+            "UpdateStageName": "Create sandbox settings file if missing",
+            "UpdateSourcePlatform": "All",
+            "UpdateSource": "CreateFile",
+            "UpdateSourceArgs": server_dir + "/{{servername}}_SandboxVars.lua",
+            "UpdateSourceData": SANDBOX_STARTER,
+            "OverwriteExistingFiles": False,
+            "SkipOnFailure": False,
+        },
+        {
+            "UpdateStageName": "Apply sandbox settings",
+            "UpdateSourcePlatform": "Windows",
+            "UpdateSource": "Executable",
+            "UpdateSourceData": "powershell.exe",
+            "UpdateSourceArgs": (
+                f"-NoProfile -ExecutionPolicy Bypass -File \"{{{{$FullRootDir}}}}{NAME}-sandbox.ps1\" "
+                "\"{{$FullBaseDir}}.\" \"{{servername}}\" \"{{SandboxControl}}\""
+            ),
+            "SkipOnFailure": False,
+        },
+        {
+            "UpdateStageName": "Apply sandbox settings",
+            "UpdateSourcePlatform": "Linux",
+            "UpdateSource": "Executable",
+            "UpdateSourceData": "/bin/bash",
+            "UpdateSourceArgs": (
+                f"\"{{{{$FullRootDir}}}}{NAME}-sandbox.sh\" "
+                "\"{{$FullBaseDir}}.\" \"{{servername}}\" \"{{SandboxControl}}\""
+            ),
+            "SkipOnFailure": False,
+        },
+        {
+            "UpdateStageName": "Check mod lists",
+            "UpdateSourcePlatform": "Windows",
+            "UpdateSource": "Executable",
+            "UpdateSourceData": "powershell.exe",
+            "UpdateSourceArgs": (
+                f"-NoProfile -ExecutionPolicy Bypass -File \"{{{{$FullRootDir}}}}{NAME}-modcheck.ps1\" "
+                "\"{{$FullBaseDir}}.\" \"{{servername}}\""
+            ),
+            "SkipOnFailure": True,
+        },
+        {
+            "UpdateStageName": "Check mod lists",
+            "UpdateSourcePlatform": "Linux",
+            "UpdateSource": "Executable",
+            "UpdateSourceData": "/bin/bash",
+            "UpdateSourceArgs": f"\"{{{{$FullRootDir}}}}{NAME}-modcheck.sh\" \"{{{{$FullBaseDir}}}}.\" \"{{{{servername}}}}\"",
+            "SkipOnFailure": True,
+        },
+        {
+            "UpdateStageName": "Make Java runnable",
+            "UpdateSourcePlatform": "Linux",
+            "UpdateSource": "SetExecutableFlag",
+            "UpdateSourceArgs": "380870/jre64/bin/java",
+            "SkipOnFailure": True,
+        },
+    ]
+
+
+def main():
+    rows = list(csv.DictReader(DATA.open(encoding="utf-8")))
+    fields, lua_lines = setting_fields(rows)
+    mods_notes(fields)
+    fields = template_fields() + fields
+    tables = sorted({r["table_path"].split(".")[1] for r in rows
+                     if r["file"] == "SandboxVars" and r["table_path"].count(".") > 1})
+    header = "-- Written by AMP at every start and added to the end of the sandbox file, so these values win.\n"
+    header += "".join(f"SandboxVars.{t} = SandboxVars.{t} or {{}}\n" for t in tables)
+    header += PRESET_LUA + "\n"
+    (ROOT / f"{NAME}config.json").write_text(json.dumps(fields, indent=4, ensure_ascii=False) + "\n", encoding="utf-8")
+    (ROOT / f"{NAME}sandbox.lua").write_text(header + "\n".join(lua_lines) + "\n", encoding="utf-8")
+    (ROOT / f"{NAME}start.json").write_text(json.dumps(prestart_stages(rows), indent=4, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"{len(fields)} fields, {len(lua_lines)} sandbox lines")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,24 @@
+[
+    {
+        "ConfigFile": "Zomboid/Server/{{servername}}.ini",
+        "ConfigType": "kvp",
+        "AutoMap": true,
+        "Importable": true,
+        "ConfigFormat": "{0}={1}",
+        "ConfigFormatRegex": "^(?<key>[A-Za-z0-9_]+)=(?<value>.*)$"
+    },
+    {
+        "ConfigFile": "Zomboid/Server/{{servername}}_SandboxImport.ini",
+        "ConfigType": "kvp",
+        "AutoMap": true,
+        "Importable": true,
+        "ConfigFormat": "{0}={1}",
+        "ConfigFormatRegex": "^(?<key>SV_[A-Za-z0-9_]+)=(?<value>.*)$"
+    },
+    {
+        "ConfigFile": "Zomboid/Server/{{servername}}_AMPSandbox.lua",
+        "ConfigType": "template",
+        "AutoMap": true,
+        "ConfigFileTemplate": "project-zomboid-plus/amp-sandbox-template.lua"
+    }
+]

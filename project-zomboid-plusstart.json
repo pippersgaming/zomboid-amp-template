@@ -1,0 +1,66 @@
+[
+    {
+        "UpdateStageName": "Create settings folder",
+        "UpdateSourcePlatform": "All",
+        "UpdateSource": "CreateDirectory",
+        "UpdateSourceArgs": "./project-zomboid-plus/380870/Zomboid/Server",
+        "SkipOnFailure": false
+    },
+    {
+        "UpdateStageName": "Create server settings file if missing",
+        "UpdateSourcePlatform": "All",
+        "UpdateSource": "CreateFile",
+        "UpdateSourceArgs": "./project-zomboid-plus/380870/Zomboid/Server/{{servername}}.ini",
+        "UpdateSourceData": "Open=true\nServerWelcomeMessage=Welcome to Project Zomboid Multiplayer! <LINE> <LINE> To interact with the Chat panel: press Tab, T, or Enter. <LINE> <LINE> The Tab key will change the target stream of the message. <LINE> <LINE> Global Streams: /all <LINE> Local Streams: /say, /yell <LINE> Special Steams: /whisper, /safehouse, /faction. <LINE> <LINE> Press the Up arrow to cycle through your message history. Click the Gear icon to customize chat. <LINE> <LINE> Happy surviving!\nDenyLoginOnOverloadedServer=true\nMaxPlayers=32\nPingLimit=0\nDropOffWhiteListAfterDeath=false\nPassword=\nMaxAccountsPerUser=0\nAllowCoop=true\nLoginQueueEnabled=false\nLoginQueueConnectTimeout=60\nAllowNonAsciiUsername=false\nDefaultPort=16261\nUDPPort=16262\nPublic=false\nPublicName=My PZ Server\nPublicDescription=\nSteamScoreboard=false\nSteamVAC=true\nUPnP=true\nserver_browser_announced_ip=\nDisplayUserName=true\nShowFirstAndLastName=false\nUsernameDisguises=false\nHideDisguisedUserName=false\nSpawnPoint=0,0,0\nSpawnItems=\nNoFire=false\nAllowDestructionBySledgehammer=true\nSledgehammerOnlyInSafehouse=false\nSleepAllowed=false\nSleepNeeded=false\nKnockedDownAllowed=false\nSneakModeHideFromOtherPlayers=true\nUltraSpeedDoesnotAffectToAnimals=false\nPlayerRespawnWithSelf=false\nPlayerRespawnWithOther=false\nFastForwardMultiplier=40.0\nItemNumbersLimitPerContainer=0\nRemovePlayerCorpsesOnCorpseRemoval=false\nTrashDeleteAll=false\nMouseOverToSeeDisplayName=true\nHidePlayersBehindYou=true\nPlayerBumpPlayer=false\nMapRemotePlayerVisibility=1\nShowCoordinates=false\nPlayerSafehouse=false\nAdminSafehouse=false\nSafehouseAllowTrepass=true\nSafehouseAllowFire=true\nSafehouseAllowLoot=true\nSafehouseAllowRespawn=false\nSafehouseDaySurvivedToClaim=0\nSafeHouseRemovalTime=144\nSafehouseAllowNonResidential=false\nSafehouseDisableDisguises=true\nMaxSafezoneSize=20000\nWar=false\nWarStartDelay=600\nWarDuration=3600\nWarSafehouseHitPoints=3\nDisableSafehouseWhenOwnerConnected=false\nFaction=true\nFactionDaySurvivedToCreate=0\nFactionPlayersRequiredForTag=1\nPVP=true\nPVPLogToolChat=true\nPVPLogToolFile=true\nSafetySystem=true\nShowSafety=true\nSafetyToggleTimer=2\nSafetyCooldownTimer=3\nSafetyDisconnectDelay=60\nPVPMeleeWhileHitReaction=false\nPVPMeleeDamageModifier=30.0\nPVPFirearmDamageModifier=50.0\nGlobalChat=true\nChatStreams=s,r,a,w,y,sh,f,all\nAnnounceDeath=false\nAnnounceAnimalDeath=false\nVoiceEnable=true\nVoiceMinDistance=10.0\nVoiceMaxDistance=100.0\nVoice3D=true\nDisableRadioStaff=false\nDisableRadioAdmin=true\nDisableRadioGM=true\nDisableRadioOverseer=false\nDisableRadioModerator=false\nDisableRadioInvisible=true\nBadWordListFile=\nGoodWordListFile=\nBadWordPolicy=3\nBadWordReplacement=[HIDDEN]\nChatMessageCharacterLimit=200\nChatMessageSlowModeTime=3\nDiscordEnable=false\nDiscordToken=\nDiscordChatChannel=\nDiscordLogChannel=\nDiscordCommandChannel=\nWebhookAddress=\nRCONPort=27015\nRCONPassword=\nMods=\nMap=Muldraugh, KY\nDoLuaChecksum=true\nWorkshopItems=\nSaveWorldEveryMinutes=0\nBackupsCount=5\nBackupsOnStart=true\nBackupsOnVersionChange=true\nBackupsPeriod=0\nSeed=\nPauseEmpty=true\nSwitchZombiesOwnershipEachUpdate=false\nBloodSplatLifespanDays=0\nCarEngineAttractionModifier=0.5\nMultiplayerStatisticsPeriod=1\nMaxPacketsPerSecond=300\nUsePhysicsHitReaction=false\nBanKickGlobalSound=true\nAntiCheatSafety=2\nAntiCheatSpeed=2\nAntiCheatNoClip=4\nAntiCheatHit=2\nAntiCheatPacketException=4\nAntiCheatPermission=2\nAntiCheatXP=2\nAntiCheatSafeHouse=2\nAntiCheatPlayer=2\nAntiCheatChecksum=2\nDisableScoreboard=false\nHideAdminsInPlayerList=false\nClientCommandFilter=-vehicle.*;+vehicle.damageWindow;+vehicle.fixPart;+vehicle.installPart;+vehicle.uninstallPart\nClientActionLogs=ISEnterVehicle;ISExitVehicle;ISTakeEngineParts;\nPerkLogs=true\nSpeedLimit=70.0\nDisableVehicleTowing=false\nDisableTrailerTowing=false\nDisableBurntTowing=false\nSafehousePreventsLootRespawn=true\n",
+        "OverwriteExistingFiles": false,
+        "SkipOnFailure": false
+    },
+    {
+        "UpdateStageName": "Create sandbox settings file if missing",
+        "UpdateSourcePlatform": "All",
+        "UpdateSource": "CreateFile",
+        "UpdateSourceArgs": "./project-zomboid-plus/380870/Zomboid/Server/{{servername}}_SandboxVars.lua",
+        "UpdateSourceData": "SandboxVars = {\n    VERSION = 6,\n}\n",
+        "OverwriteExistingFiles": false,
+        "SkipOnFailure": false
+    },
+    {
+        "UpdateStageName": "Apply sandbox settings",
+        "UpdateSourcePlatform": "Windows",
+        "UpdateSource": "Executable",
+        "UpdateSourceData": "powershell.exe",
+        "UpdateSourceArgs": "-NoProfile -ExecutionPolicy Bypass -File \"{{$FullRootDir}}project-zomboid-plus-sandbox.ps1\" \"{{$FullBaseDir}}.\" \"{{servername}}\" \"{{SandboxControl}}\"",
+        "SkipOnFailure": false
+    },
+    {
+        "UpdateStageName": "Apply sandbox settings",
+        "UpdateSourcePlatform": "Linux",
+        "UpdateSource": "Executable",
+        "UpdateSourceData": "/bin/bash",
+        "UpdateSourceArgs": "\"{{$FullRootDir}}project-zomboid-plus-sandbox.sh\" \"{{$FullBaseDir}}.\" \"{{servername}}\" \"{{SandboxControl}}\"",
+        "SkipOnFailure": false
+    },
+    {
+        "UpdateStageName": "Check mod lists",
+        "UpdateSourcePlatform": "Windows",
+        "UpdateSource": "Executable",
+        "UpdateSourceData": "powershell.exe",
+        "UpdateSourceArgs": "-NoProfile -ExecutionPolicy Bypass -File \"{{$FullRootDir}}project-zomboid-plus-modcheck.ps1\" \"{{$FullBaseDir}}.\" \"{{servername}}\"",
+        "SkipOnFailure": true
+    },
+    {
+        "UpdateStageName": "Check mod lists",
+        "UpdateSourcePlatform": "Linux",
+        "UpdateSource": "Executable",
+        "UpdateSourceData": "/bin/bash",
+        "UpdateSourceArgs": "\"{{$FullRootDir}}project-zomboid-plus-modcheck.sh\" \"{{$FullBaseDir}}.\" \"{{servername}}\"",
+        "SkipOnFailure": true
+    },
+    {
+        "UpdateStageName": "Make Java runnable",
+        "UpdateSourcePlatform": "Linux",
+        "UpdateSource": "SetExecutableFlag",
+        "UpdateSourceArgs": "380870/jre64/bin/java",
+        "SkipOnFailure": true
+    }
+]

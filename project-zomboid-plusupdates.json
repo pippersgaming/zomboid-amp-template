@@ -1,0 +1,77 @@
+[
+    {
+        "UpdateStageName": "Download Project Zomboid server",
+        "UpdateSourcePlatform": "All",
+        "UpdateSource": "SteamCMD",
+        "UpdateSourceData": "380870",
+        "UpdateSourceArgs": "108600",
+        "UpdateSourceVersion": "{{GameBranch}}",
+        "SkipOnFailure": false
+    },
+    {
+        "UpdateStageName": "Copy Steam client files",
+        "UpdateSourcePlatform": "Linux",
+        "UpdateSource": "Executable",
+        "UpdateSourceData": "/bin/bash",
+        "UpdateSourceArgs": "-c \"cd '{{$FullRootDir}}' && cp -f linux32/steamclient.so 380870/ 2>/dev/null; cp -f linux64/steamclient.so 380870/linux64/ 2>/dev/null; exit 0\"",
+        "SkipOnFailure": false
+    },
+    {
+        "UpdateStageName": "Copy Steam client files",
+        "UpdateSourcePlatform": "Windows",
+        "UpdateSource": "Executable",
+        "UpdateSourceData": "cmd.exe",
+        "UpdateSourceArgs": "/c cd /d \"{{$FullRootDir}}\" && for %f in (steamclient.dll steamclient64.dll tier0_s.dll tier0_s64.dll vstdlib_s.dll vstdlib_s64.dll) do @if exist %f copy /y %f 380870\\ >nul",
+        "SkipOnFailure": false
+    },
+    {
+        "UpdateStageName": "Download sandbox settings template",
+        "UpdateSourcePlatform": "All",
+        "UpdateSource": "FetchURL",
+        "UpdateSourceData": "https://raw.githubusercontent.com/pippersgaming/zomboid-amp-template/main/project-zomboid-plussandbox.lua",
+        "UpdateSourceArgs": "amp-sandbox-template.lua",
+        "UpdateSourceTarget": "{{$FullRootDir}}",
+        "OverwriteExistingFiles": true,
+        "SkipOnFailure": false
+    },
+    {
+        "UpdateStageName": "Download sandbox settings script",
+        "UpdateSourcePlatform": "Windows",
+        "UpdateSource": "FetchURL",
+        "UpdateSourceData": "https://raw.githubusercontent.com/pippersgaming/zomboid-amp-template/main/project-zomboid-plus-sandbox.ps1",
+        "UpdateSourceArgs": "project-zomboid-plus-sandbox.ps1",
+        "UpdateSourceTarget": "{{$FullRootDir}}",
+        "OverwriteExistingFiles": true,
+        "SkipOnFailure": false
+    },
+    {
+        "UpdateStageName": "Download sandbox settings script",
+        "UpdateSourcePlatform": "Linux",
+        "UpdateSource": "FetchURL",
+        "UpdateSourceData": "https://raw.githubusercontent.com/pippersgaming/zomboid-amp-template/main/project-zomboid-plus-sandbox.sh",
+        "UpdateSourceArgs": "project-zomboid-plus-sandbox.sh",
+        "UpdateSourceTarget": "{{$FullRootDir}}",
+        "OverwriteExistingFiles": true,
+        "SkipOnFailure": false
+    },
+    {
+        "UpdateStageName": "Download mod list checker",
+        "UpdateSourcePlatform": "Windows",
+        "UpdateSource": "FetchURL",
+        "UpdateSourceData": "https://raw.githubusercontent.com/pippersgaming/zomboid-amp-template/main/project-zomboid-plus-modcheck.ps1",
+        "UpdateSourceArgs": "project-zomboid-plus-modcheck.ps1",
+        "UpdateSourceTarget": "{{$FullRootDir}}",
+        "OverwriteExistingFiles": true,
+        "SkipOnFailure": true
+    },
+    {
+        "UpdateStageName": "Download mod list checker",
+        "UpdateSourcePlatform": "Linux",
+        "UpdateSource": "FetchURL",
+        "UpdateSourceData": "https://raw.githubusercontent.com/pippersgaming/zomboid-amp-template/main/project-zomboid-plus-modcheck.sh",
+        "UpdateSourceArgs": "project-zomboid-plus-modcheck.sh",
+        "UpdateSourceTarget": "{{$FullRootDir}}",
+        "OverwriteExistingFiles": true,
+        "SkipOnFailure": true
+    }
+]

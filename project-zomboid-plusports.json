@@ -1,0 +1,23 @@
+[
+    {
+        "Protocol": "UDP",
+        "Port": 16261,
+        "Ref": "GamePort",
+        "Name": "Game port",
+        "Description": "The port players connect to. Open (forward) this on your router for players outside your home."
+    },
+    {
+        "Protocol": "UDP",
+        "Port": 16262,
+        "Ref": "DirectPort",
+        "Name": "Direct connection port",
+        "Description": "The game's second port, for direct (non-Steam) connections. Open (forward) this too."
+    },
+    {
+        "Protocol": "TCP",
+        "Port": 27015,
+        "Ref": "RCONPort",
+        "Name": "RCON port",
+        "Description": "Only used when an RCON password is set. Do not forward this on your router unless a tool outside your network needs it."
+    }
+]
