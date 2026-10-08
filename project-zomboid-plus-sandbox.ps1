@@ -6,6 +6,8 @@ $amp = Join-Path $dir "${ServerName}_AMPSandbox.lua"
 $last = Join-Path $dir "${ServerName}_AMPSandbox.last.lua"
 $import = Join-Path $dir "${ServerName}_SandboxImport.ini"
 $importName = "${ServerName}_SandboxImport.ini"
+$sandBin = Join-Path $BaseDir "Zomboid/Saves/Multiplayer/$ServerName/map_sand.bin"
+if (Test-Path -LiteralPath $sandBin) { Write-Output "[Sandbox] Warning: this world has a map_sand.bin file in its save folder, which single player saves make. The game reads sandbox settings from that file instead of the sandbox file, so AMP's boxes and uploaded settings will not change this world. To switch to the sandbox file: make sure it holds the settings you want, stop the server, and rename map_sand.bin to map_sand.bin.old." }
 if (-not (Test-Path -LiteralPath $sandbox)) { exit 0 }
 
 $lines = [IO.File]::ReadAllLines($sandbox)
@@ -42,7 +44,7 @@ if (-not (Test-Path -LiteralPath $amp)) { exit 0 }
 
 if ($isWorld -and -not (Test-Path -LiteralPath $last)) {
     Copy-Item -LiteralPath $amp -Destination $last -Force
-    Write-Output "[Sandbox] Existing world found, so its sandbox settings were kept and nothing from AMP was applied."
+    Write-Output "[Sandbox] Sandbox file from the game found (an existing world or uploaded settings), so its settings were kept and nothing from AMP was applied."
     Write-Output "[Sandbox] To show the world's settings in AMP: in the File Manager, right click Zomboid/Server/$importName and choose Import."
     exit 0
 }

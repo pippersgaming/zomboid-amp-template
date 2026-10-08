@@ -28,8 +28,8 @@ App.BaseDirectory=./project-zomboid-plus/380870/
 App.ExecutableWin=380870\jre64\bin\java.exe
 App.ExecutableLinux=380870/jre64/bin/java
 App.WorkingDir=380870
-App.WindowsCommandLineArgs=-Dfile.encoding=UTF-8 -Djava.awt.headless=true -Dzomboid.steam=1 -Dzomboid.znetlog=1 -Duser.home=./ -Xmx{{MaxMemory}}m {{JavaGC}} {{RconLocalOnly}} -XX:-CreateCoredumpOnCrash -XX:-OmitStackTraceInFastThrow -Djava.library.path=natives/;natives/win64/;. {{CustomJavaArgs}} -cp java/*;java/;projectzomboid.jar;./
-App.LinuxCommandLineArgs=-Dfile.encoding=UTF-8 -Djava.awt.headless=true -Dzomboid.steam=1 -Dzomboid.znetlog=1 -Duser.home=./ -Xmx{{MaxMemory}}m {{JavaGC}} {{RconLocalOnly}} -XX:-OmitStackTraceInFastThrow -Djava.library.path=linux64/:natives/ -Djava.security.egd=file:/dev/urandom {{CustomJavaArgs}} -cp java/:java/*:projectzomboid.jar:./
+App.WindowsCommandLineArgs=--enable-native-access=ALL-UNNAMED --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED -Dfile.encoding=UTF-8 -Djava.awt.headless=true -Dzomboid.steam=1 -Dzomboid.znetlog=1 -Duser.home=./ -Xmx{{MaxMemory}}m {{JavaGC}} {{RconLocalOnly}} -XX:-CreateCoredumpOnCrash -XX:-OmitStackTraceInFastThrow -Djava.library.path=natives/;natives/win64/;. {{CustomJavaArgs}} -cp java/*;java/;projectzomboid.jar;./
+App.LinuxCommandLineArgs=--enable-native-access=ALL-UNNAMED --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED -Dfile.encoding=UTF-8 -Djava.awt.headless=true -Dzomboid.steam=1 -Dzomboid.znetlog=1 -Duser.home=./ -Xmx{{MaxMemory}}m {{JavaGC}} {{RconLocalOnly}} -XX:-OmitStackTraceInFastThrow -Djava.library.path=linux64/:natives/ -Djava.security.egd=file:/dev/urandom {{CustomJavaArgs}} -cp java/:java/*:projectzomboid.jar:./
 App.CommandLineArgs={{$PlatformArgs}} zombie.network.GameServer -port {{$GamePort}} -udpport {{$DirectPort}} {{$FormattedArgs}} {{PlayerTracking}} {{CustomServerArgs}}
 App.CommandLineParameterFormat=-{0} "{1}"
 App.CommandLineParameterDelimiter=

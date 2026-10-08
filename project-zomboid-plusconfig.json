@@ -30,32 +30,11 @@
         "DefaultValue": "A mod has been updated. The server will restart soon to install it."
     },
     {
-        "DisplayName": "Apply a game preset at next start",
-        "Category": "World:public",
-        "Subcategory": "Sandbox control and presets:tune:0",
-        "Order": 2,
-        "Description": "Loads one of the game's own sandbox presets, the same ones single player offers, at the next start. Each sandbox setting's help lists its value in every preset, so you can see what changes. The preset is applied once, when you change this. Any sandbox box you change at the same time still wins over the preset. AMP cannot read the result back, so AMP's sandbox boxes keep showing their old values. To apply the same preset again later, set None, start once, then pick it again. Settings marked 'new world only' only take effect on a new world. Works with 'Last change wins', the default in 'Sandbox changes made in game' above.",
-        "Keywords": "preset,apocalypse,outbreak,rising,extinction,six months later,sandbox",
-        "FieldName": "SandboxPreset",
-        "ParamFieldName": "SandboxPreset",
-        "InputType": "enum",
-        "IncludeInCommandLine": false,
-        "DefaultValue": "none",
-        "EnumValues": {
-            "none": "None",
-            "Apocalypse": "Apocalypse (game default)",
-            "Outbreak": "Outbreak",
-            "Rising": "Rising",
-            "Extinction": "Extinction",
-            "SixMonthsLater": "Six Months Later"
-        }
-    },
-    {
         "DisplayName": "Admin password",
         "Category": "Server:dns",
         "Subcategory": "Start here:rocket_launch:1",
         "Order": 1,
-        "Description": "Start here. Set this before the first start: the server will not start while it is empty. It is the password for the in-game admin account (the username below), not the password players use to join. The game resets the admin account to this password at every start, so this box is always the real password. Change settings here, not in the game's files. AMP rewrites the files from these boxes at every start. Each box saves when you click away from it and takes effect at the next start, so changing one while the server runs is safe. Sandbox settings can also be changed in the game's admin menu: see 'Sandbox changes made in game' at the top of the World tab. Mods' own sandbox settings are not in AMP: change those in the game's admin menu, and they are kept.",
+        "Description": "Start here. Set this before the first start: the server will not start while it is empty. It is the password for the in-game admin account (the username below), not the password players use to join. The game resets the admin account to this password at every start, so this box is always the real password. Change settings here, not in the game's files. AMP rewrites the files from these boxes at every start. Each box saves when you click away from it and takes effect at the next start, so changing one while the server runs is safe. Sandbox settings can also be changed in the game's admin menu: see 'Sandbox changes made in game' at the top of the World tab. Mods' own sandbox settings are not in AMP: change those in the game's admin menu or its Manage Settings editor (see the World tab), and they are kept.",
         "Keywords": "admin,password,adminpassword,start,first",
         "FieldName": "adminpassword",
         "ParamFieldName": "adminpassword",
@@ -115,9 +94,9 @@
     {
         "DisplayName": "Sandbox changes made in game",
         "Category": "World:public",
-        "Subcategory": "Sandbox control and presets:tune:0",
+        "Subcategory": "Sandbox control:tune:0",
         "Order": 1,
-        "Description": "Who wins when a sandbox setting (zombies, loot, world and so on) is changed both here and in the game's admin menu. Last change wins: at each start, only the boxes you changed here since the last start are applied; everything else keeps the game's value, including changes made in game. AMP always wins: every sandbox box is applied at each start, so in-game changes last until the next restart. Mods' own sandbox settings are always kept, whichever you pick. To make these boxes show what the game is really using (after changes in game, or after bringing in an existing world): start the server once, then in the File Manager right click Zomboid/Server/<server save name>_SandboxImport.ini and choose Import. That file is refreshed at every start. An existing world is safe: on its first start here, nothing from AMP is applied to it until you import or change a box.",
+        "Description": "Presets and mods' sandbox settings: use the game's own settings editor. On your PC, open Project Zomboid, click HOST, then Manage settings, then Create New Settings (or Edit Selected Settings). Name the settings the same as this server's save name so nothing needs renaming. Choose the same mods as this server, use Apply Preset if you want a preset, change any setting, game or mod, and save. The game saves it in the Zomboid\\Server folder in your user folder. Stop this server, then in the File Manager upload only the saved servertest_SandboxVars.lua (your save name in place of servertest) to Zomboid/Server, replacing the old one, and start. Leave the .ini it also saves: AMP's own boxes set those settings. With Last change wins the uploaded settings are kept; with AMP always wins, AMP's sandbox boxes replace them. Then import as described below so these boxes match. This setting decides who wins when a sandbox setting (zombies, loot, world and so on) is changed both here and in the game's admin menu. Last change wins: at each start, only the boxes you changed here since the last start are applied; everything else keeps the game's value, including changes made in game. AMP always wins: every sandbox box is applied at each start, so in-game changes last until the next restart. Mods' own sandbox settings are always kept, whichever you pick. To make these boxes show what the game is really using (after changes in game, or after bringing in an existing world): start the server once, then in the File Manager right click Zomboid/Server/servertest_SandboxImport.ini (your save name in place of servertest) and choose Import. That file is refreshed at every start. An existing world is safe: on its first start here, nothing from AMP is applied to it until you import or change a box.",
         "Keywords": "sandbox,in game,admin menu,sync,control,overwrite",
         "FieldName": "SandboxControl",
         "ParamFieldName": "SandboxControl",

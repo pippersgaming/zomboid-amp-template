@@ -4,7 +4,6 @@ SandboxVars.Map = SandboxVars.Map or {}
 SandboxVars.MultiplierConfig = SandboxVars.MultiplierConfig or {}
 SandboxVars.ZombieConfig = SandboxVars.ZombieConfig or {}
 SandboxVars.ZombieLore = SandboxVars.ZombieLore or {}
-do local p = "{{SandboxPreset}}"; if p ~= "none" then for _, n in ipairs({ "Apocalypse", p }) do local ok, t = pcall(require, "Sandbox/" .. n); if ok and type(t) == "table" then for k, v in pairs(t) do if type(v) == "table" then SandboxVars[k] = SandboxVars[k] or {}; for k2, v2 in pairs(v) do SandboxVars[k][k2] = v2 end elseif k ~= "VERSION" and k ~= "Version" then SandboxVars[k] = v end end end end end end
 SandboxVars.EnableVehicles = {{SV_EnableVehicles}}
 SandboxVars.CarSpawnRate = {{SV_CarSpawnRate}}
 SandboxVars.ZombieAttractionMultiplier = {{SV_ZombieAttractionMultiplier}}

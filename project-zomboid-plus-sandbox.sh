@@ -7,6 +7,7 @@ sandbox="$dir/${name}_SandboxVars.lua"
 amp="$dir/${name}_AMPSandbox.lua"
 last="$dir/${name}_AMPSandbox.last.lua"
 import="$dir/${name}_SandboxImport.ini"
+[ -f "$base/Zomboid/Saves/Multiplayer/$name/map_sand.bin" ] && echo "[Sandbox] Warning: this world has a map_sand.bin file in its save folder, which single player saves make. The game reads sandbox settings from that file instead of the sandbox file, so AMP's boxes and uploaded settings will not change this world. To switch to the sandbox file: make sure it holds the settings you want, stop the server, and rename map_sand.bin to map_sand.bin.old."
 [ -f "$sandbox" ] || exit 0
 
 world=0
@@ -32,7 +33,7 @@ fi
 
 if [ "$world" = 1 ] && [ ! -f "$last" ]; then
     cp -f "$amp" "$last"
-    echo "[Sandbox] Existing world found, so its sandbox settings were kept and nothing from AMP was applied."
+    echo "[Sandbox] Sandbox file from the game found (an existing world or uploaded settings), so its settings were kept and nothing from AMP was applied."
     echo "[Sandbox] To show the world's settings in AMP: in the File Manager, right click Zomboid/Server/${name}_SandboxImport.ini and choose Import."
     exit 0
 fi

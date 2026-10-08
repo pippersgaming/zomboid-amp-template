@@ -32,7 +32,7 @@ SECTIONS = {
     "Chat and voice": ("Players", "chat", 4),
     "Zombies: population and respawn": ("World", "groups", 1),
     "Zombies: behaviour": ("World", "directions_run", 2),
-    "Sandbox control and presets": ("World", "tune", 0),
+    "Sandbox control": ("World", "tune", 0),
     "World and time": ("World", "schedule", 3),
     "Weather and nature": ("World", "cloud", 4),
     "Utilities": ("World", "bolt", 5),
@@ -249,7 +249,7 @@ def template_fields():
     _, java = section("Java and startup")
     _, rcon = section("Remote admin (RCON)")
     _, mods = section("Mods and map")
-    world, presets = section("Sandbox control and presets")
+    world, sandbox = section("Sandbox control")
     return [
         {
             "DisplayName": "Show players in AMP",
@@ -282,24 +282,6 @@ def template_fields():
             "DefaultValue": "A mod has been updated. The server will restart soon to install it.",
         },
         {
-            "DisplayName": "Apply a game preset at next start",
-            "Category": world, "Subcategory": presets, "Order": 2,
-            "Description": (
-                "Loads one of the game's own sandbox presets, the same ones single player offers, at the next start. "
-                "Each sandbox setting's help lists its value in every preset, so you can see what changes. "
-                "The preset is applied once, when you change this. Any sandbox box you change at the same time still wins over the preset. "
-                "AMP cannot read the result back, so AMP's sandbox boxes keep showing their old values. "
-                "To apply the same preset again later, set None, start once, then pick it again. "
-                "Settings marked 'new world only' only take effect on a new world. "
-                "Works with 'Last change wins', the default in 'Sandbox changes made in game' above."
-            ),
-            "Keywords": "preset,apocalypse,outbreak,rising,extinction,six months later,sandbox",
-            "FieldName": "SandboxPreset", "ParamFieldName": "SandboxPreset",
-            "InputType": "enum", "IncludeInCommandLine": False, "DefaultValue": "none",
-            "EnumValues": {"none": "None", "Apocalypse": "Apocalypse (game default)", "Outbreak": "Outbreak",
-                           "Rising": "Rising", "Extinction": "Extinction", "SixMonthsLater": "Six Months Later"},
-        },
-        {
             "DisplayName": "Admin password",
             "Category": tab, "Subcategory": start, "Order": 1,
             "Description": (
@@ -309,7 +291,7 @@ def template_fields():
                 "Change settings here, not in the game's files. AMP rewrites the files from these boxes at every start. "
                 "Each box saves when you click away from it and takes effect at the next start, so changing one while the server runs is safe. "
                 "Sandbox settings can also be changed in the game's admin menu: see 'Sandbox changes made in game' at the top of the World tab. "
-                "Mods' own sandbox settings are not in AMP: change those in the game's admin menu, and they are kept."
+                "Mods' own sandbox settings are not in AMP: change those in the game's admin menu or its Manage Settings editor (see the World tab), and they are kept."
             ),
             "Keywords": "admin,password,adminpassword,start,first",
             "FieldName": "adminpassword", "ParamFieldName": "adminpassword",
@@ -353,15 +335,23 @@ def template_fields():
         },
         {
             "DisplayName": "Sandbox changes made in game",
-            "Category": world, "Subcategory": presets, "Order": 1,
+            "Category": world, "Subcategory": sandbox, "Order": 1,
             "Description": (
-                "Who wins when a sandbox setting (zombies, loot, world and so on) is changed both here and in the game's admin menu. "
+                "Presets and mods' sandbox settings: use the game's own settings editor. On your PC, open Project Zomboid, click HOST, then Manage settings, "
+                "then Create New Settings (or Edit Selected Settings). Name the settings the same as this server's save name so nothing needs renaming. "
+                "Choose the same mods as this server, use Apply Preset if you want a preset, change any setting, game or mod, and save. "
+                "The game saves it in the Zomboid\\Server folder in your user folder. Stop this server, then in the File Manager upload only the saved "
+                "servertest_SandboxVars.lua (your save name in place of servertest) to Zomboid/Server, replacing the old one, and start. "
+                "Leave the .ini it also saves: AMP's own boxes set those settings. "
+                "With Last change wins the uploaded settings are kept; with AMP always wins, AMP's sandbox boxes replace them. "
+                "Then import as described below so these boxes match. "
+                "This setting decides who wins when a sandbox setting (zombies, loot, world and so on) is changed both here and in the game's admin menu. "
                 "Last change wins: at each start, only the boxes you changed here since the last start are applied; everything else keeps the game's value, "
                 "including changes made in game. "
                 "AMP always wins: every sandbox box is applied at each start, so in-game changes last until the next restart. "
                 "Mods' own sandbox settings are always kept, whichever you pick. "
                 "To make these boxes show what the game is really using (after changes in game, or after bringing in an existing world): "
-                "start the server once, then in the File Manager right click Zomboid/Server/<server save name>_SandboxImport.ini and choose Import. "
+                "start the server once, then in the File Manager right click Zomboid/Server/servertest_SandboxImport.ini (your save name in place of servertest) and choose Import. "
                 "That file is refreshed at every start. "
                 "An existing world is safe: on its first start here, nothing from AMP is applied to it until you import or change a box."
             ),
@@ -455,21 +445,11 @@ def mods_notes(fields):
             f["Order"] = {"Mods": 1, "WorkshopItems": 2, "Map": 3, "WebhookAddress": 1}[f["ParamFieldName"]]
 
 
-PRESET_LUA = (
-    'do local p = "{{SandboxPreset}}"; if p ~= "none" then '
-    'for _, n in ipairs({ "Apocalypse", p }) do '
-    'local ok, t = pcall(require, "Sandbox/" .. n); '
-    'if ok and type(t) == "table" then for k, v in pairs(t) do '
-    'if type(v) == "table" then SandboxVars[k] = SandboxVars[k] or {}; '
-    'for k2, v2 in pairs(v) do SandboxVars[k][k2] = v2 end '
-    'elseif k ~= "VERSION" and k ~= "Version" then SandboxVars[k] = v end '
-    'end end end end end'
-)
 SANDBOX_STARTER ="SandboxVars = {\n    VERSION = 6,\n}\n"
 
 
-def prestart_stages(rows):
-    server_dir = f"./{NAME}/380870/Zomboid/Server"
+def starter_stages(rows):
+    server_dir = "{{$FullBaseDir}}Zomboid/Server"
     return [
         {
             "UpdateStageName": "Create settings folder",
@@ -496,6 +476,11 @@ def prestart_stages(rows):
             "OverwriteExistingFiles": False,
             "SkipOnFailure": False,
         },
+    ]
+
+
+def prestart_stages(rows):
+    return starter_stages(rows) + [
         {
             "UpdateStageName": "Apply sandbox settings",
             "UpdateSourcePlatform": "Windows",
@@ -541,14 +526,15 @@ def prestart_stages(rows):
             "UpdateStageName": "Make Java runnable",
             "UpdateSourcePlatform": "Linux",
             "UpdateSource": "SetExecutableFlag",
-            "UpdateSourceArgs": "380870/jre64/bin/java",
+            "UpdateSourceArgs": "{{$FullBaseDir}}jre64/bin/java",
             "SkipOnFailure": True,
         },
     ]
 
 
 def main():
-    rows = list(csv.DictReader(DATA.open(encoding="utf-8")))
+    with DATA.open(encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
     fields, lua_lines = setting_fields(rows)
     mods_notes(fields)
     fields = template_fields() + fields
@@ -556,10 +542,14 @@ def main():
                      if r["file"] == "SandboxVars" and r["table_path"].count(".") > 1})
     header = "-- Written by AMP at every start and added to the end of the sandbox file, so these values win.\n"
     header += "".join(f"SandboxVars.{t} = SandboxVars.{t} or {{}}\n" for t in tables)
-    header += PRESET_LUA + "\n"
     (ROOT / f"{NAME}config.json").write_text(json.dumps(fields, indent=4, ensure_ascii=False) + "\n", encoding="utf-8")
     (ROOT / f"{NAME}sandbox.lua").write_text(header + "\n".join(lua_lines) + "\n", encoding="utf-8")
     (ROOT / f"{NAME}start.json").write_text(json.dumps(prestart_stages(rows), indent=4, ensure_ascii=False) + "\n", encoding="utf-8")
+    updates_path = ROOT / f"{NAME}updates.json"
+    starters = starter_stages(rows)
+    names = {s["UpdateStageName"] for s in starters}
+    updates = [s for s in json.loads(updates_path.read_text(encoding="utf-8")) if s["UpdateStageName"] not in names]
+    updates_path.write_text(json.dumps(updates + starters, indent=4, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"{len(fields)} fields, {len(lua_lines)} sandbox lines")
 
 

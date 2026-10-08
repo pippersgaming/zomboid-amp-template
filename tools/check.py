@@ -66,7 +66,7 @@ for missing in sorted(sandbox_fields - placeholders):
 for missing in sorted(placeholders - seen):
     problem(f"sandbox template uses {{{{{missing}}}}} but no field has that name")
 for line in lua.splitlines():
-    if line.startswith("--") or not line.strip() or line.startswith('do local p = "{{SandboxPreset}}"'):
+    if line.startswith("--") or not line.strip():
         continue
     if not re.fullmatch(r"SandboxVars(\.\w+)+ = (\{\{\w+\}\}|\[==\[\{\{\w+\}\}\]==\]|SandboxVars\.\w+ or \{\})", line):
         problem(f"sandbox template line looks wrong: {line}")

@@ -12,7 +12,7 @@ The most admin-friendly Project Zomboid template for AMP, with every setting che
 
 - A plain-English explanation on every setting, grouped by what you're trying to do: joining, PvP, safehouses, zombies, world and time, loot, chat.
 - A label on every setting showing where it applies: single player, hosted or dedicated.
-- Presets based on the game's own Build 42 sandbox presets, showing exactly what each one changes before you apply it.
+- Every sandbox setting lists its value in each of the game's five Build 42 presets, and the World tab explains how to apply a preset or change mods' settings with the game's own settings editor.
 - Warning labels on settings that only apply to a brand new world, or that can reset something.
 - A working player count on Build 42.
 - Spotting mods that need updating, and restarting with warnings.
