@@ -425,8 +425,8 @@ def mods_notes(fields):
             "A backslash before an ID (\\ModA) is optional: the game removes backslashes before reading this list."
         ),
         "WorkshopItems": (
-            "The Steam Workshop item numbers, separated by semicolons, for example 2392709985;2169435993. "
-            "The number is at the end of the mod's Workshop page address. The game downloads these itself at start. "
+            "The Steam Workshop item numbers, separated by semicolons with no spaces. "
+            "Each number is at the end of the mod's Workshop page address, after id=. The game downloads these itself at start. "
             "Do not use AMP's own Steam Workshop box on the Updates page."
         ),
         "Map": (
