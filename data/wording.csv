@@ -30,11 +30,11 @@ SledgehammerOnlyInSafehouse,Sledgehammer only in own safehouse,On: players who a
 SleepAllowed,Sleeping allowed,"On: players can sleep in beds and cars, and when everyone online is asleep, time speeds up. Usually off on public servers."
 SleepNeeded,Sleep needed,On: characters get tired and must sleep. Only works when 'Sleeping allowed' is also on.
 KnockedDownAllowed,Players can be knocked down,On: players can be knocked down. The game marks this as work in progress that may cause position desync.
-SneakModeHideFromOtherPlayers,Sneaking hides from players,"On: a sneaking player is harder for other players to see, unless they're sprinting."
+SneakModeHideFromOtherPlayers,Sneaking hides players,"On: sneaking players can stay hidden from other players. Each watcher's game rolls a chance to spot them based on distance, light, cover and their Sneaking level, but anyone within 2 tiles, or sprinting, is always seen. Off: sneaking doesn't hide anyone."
 UltraSpeedDoesnotAffectToAnimals,Animals ignore fast time,"On: animals aren't sped up while time runs very fast, for example while everyone sleeps."
 PlayerRespawnWithSelf,Respawn where you died,On: a player who dies can respawn at the spot where they died.
 PlayerRespawnWithOther,Respawn next to a partner,On: a player who dies can respawn next to a split-screen or Remote Play partner on the same PC.
-FastForwardMultiplier,Sleep time speed,How much faster time runs while every online player is asleep.
+FastForwardMultiplier,Sleep fast forward speed,"How fast time runs while everyone online is asleep, which needs 'Sleeping allowed'. It's measured against a 30 minute day whatever 'Day length' is set to, so 40 passes a day in about 45 real seconds, and zombies break doors and barricades faster by the same amount."
 ItemNumbersLimitPerContainer,Item limit per container,"The most items one container can hold, counting every small item such as each nail. 0 means no limit."
 RemovePlayerCorpsesOnCorpseRemoval,Remove player bodies too,On: dead players' bodies are also removed when the corpse removal timer in the sandbox settings clears bodies.
 TrashDeleteAll,Delete all button on bins,On: players get a 'delete all' button on bins.
@@ -43,8 +43,8 @@ HidePlayersBehindYou,Hide players behind you,"On: other players behind your char
 PlayerBumpPlayer,Players bump into each other,On: players running into each other bump and can knock each other over.
 MapRemotePlayerVisibility,Players shown on the map,"Which other players appear on the in-game map: 1 nobody, 2 faction and safehouse mates, 3 those plus players you can see, 4 everyone. Staff who can see the world map always see everyone."
 ShowCoordinates,Show map coordinates,On: players see their map coordinates in the lower right corner.
-PlayerSafehouse,Players can claim safehouses,On: players (and admins) can claim a building as their safehouse.
-AdminSafehouse,Only admins claim safehouses,On: only admins can claim safehouses.
+PlayerSafehouse,Players can claim safehouses,"On: any player can claim one building as a safehouse once they've survived the days you set, even if 'Admins only safehouses' is also on. If both are off, nobody can claim a safehouse."
+AdminSafehouse,Admins only safehouses,"On, with 'Players can claim safehouses' off: only admins and moderators get the option to claim safehouses, and they can hold more than one. If 'Players can claim safehouses' is also on, this makes no difference and anyone can claim."
 SafehouseAllowTrepass,Non-members can enter safehouses,On: people who aren't members can walk into a safehouse. Off: only members can. The game spells this setting Trepass.
 SafehouseAllowFire,Fire damages safehouses,On: fire can damage safehouses.
 SafehouseAllowLoot,Non-members can loot safehouses,On: people who aren't members can take items from a safehouse.
@@ -57,7 +57,7 @@ MaxSafezoneSize,Largest safezone size,"The largest area a safezone claim can cov
 War,Safehouse wars,"On: safehouse wars can happen, and during a war safehouse protection is lifted."
 WarStartDelay,War warning time (seconds),Seconds of warning before a war begins.
 WarDuration,War length (seconds),"How long a war lasts, in seconds."
-WarSafehouseHitPoints,Safehouse hit points in war,The safehouse hit point limit used during wars.
+WarSafehouseHitPoints,War refusals before loss,"Only matters when 'Safehouse wars' is on. Each war declared on a safehouse that the owner refuses or doesn't answer in time counts once, and when the count reaches this number the safehouse is released. Wars that are accepted and fought don't count, and 0 means it's never released this way."
 DisableSafehouseWhenOwnerConnected,Protection only while owner is offline,"On: a safehouse acts like a normal house while an owner is online, so its protection only applies while they're offline."
 Faction,Factions allowed,On: players can create factions.
 FactionDaySurvivedToCreate,Days survived to make a faction,In-game days a character must survive before creating a faction.
@@ -67,19 +67,19 @@ PVPLogToolChat,PvP reports in admin chat,On: PvP events are reported in admin ch
 PVPLogToolFile,PvP events in log files,On: PvP events are written to the server log files.
 SafetySystem,PvP safety switch,"Only matters when PvP is on. On: each player chooses whether they're open to PvP, and someone can only be hurt if both players have it switched on. Off: everyone can hurt everyone."
 ShowSafety,Skull over PvP players,On: a skull shows over players who have PvP switched on.
-SafetyToggleTimer,PvP switch time,How long it takes to switch your PvP mode on or off.
-SafetyCooldownTimer,PvP switch cooldown,How long a player must wait before switching PvP mode again. Hitting another player adds to the wait.
-SafetyDisconnectDelay,PvP logout delay,"When a player leaves while a PvP timer is still running, their character stays behind for a delay based on this value, so leaving can't be used to escape a fight."
+SafetyToggleTimer,PvP switch-off delay,"Turning PvP on is instant. Turning it back off keeps the player open to PvP for this many real seconds first, and the switch can't be used again until then. 0 makes it instant."
+SafetyCooldownTimer,PvP combat cooldown,"Real seconds added to a player's cooldown each time they attack another player while open to PvP, stacking with each attack. They can't change their PvP switch until it runs out. 0 adds none."
+SafetyDisconnectDelay,PvP logout delay,"Only matters when 'PvP' and the 'PvP safety switch' are on. If a player leaves while their switch is changing or their attack cooldown is running, their character stays in the world for twice this many seconds, longer if they're hit, and their quit buttons stay greyed out until the cooldown ends. 0 turns this off."
 PVPMeleeWhileHitReaction,Hit back straight away in PvP,On: a player who has just been hit by another player can swing back straight away.
-PVPMeleeDamageModifier,PvP melee damage,Damage multiplier for melee hits between players.
-PVPFirearmDamageModifier,PvP firearm damage,Damage multiplier for gun hits between players.
+PVPMeleeDamageModifier,PvP melee damage,"Multiplies melee damage when one player hits another. It's a straight multiplier, not a percentage, so 1 leaves damage unchanged and the default 30 is 30 times that."
+PVPFirearmDamageModifier,PvP firearm damage,"Multiplies ranged weapon damage when one player shoots another. It's a straight multiplier, not a percentage, so 1 leaves damage unchanged and the default 50 is 50 times that."
 GlobalChat,Global chat,On: the global /all chat channel is available.
 ChatStreams,Chat channels,"Which chat channels exist, as short codes separated by commas: s say, r radio, a admin, w whisper, y yell, sh safehouse, f faction, all global (only if 'Global chat' is on)."
 AnnounceDeath,Announce player deaths,On: a message goes to everyone in chat whenever a player dies.
 AnnounceAnimalDeath,Announce animal deaths,On: a message goes to everyone in chat whenever an animal dies.
 VoiceEnable,Voice chat,On: built-in voice chat is available.
-VoiceMinDistance,Voice minimum distance (tiles),The minimum distance in tiles for voice chat.
-VoiceMaxDistance,Voice range (tiles),The furthest distance in tiles at which voice chat can be heard.
+VoiceMinDistance,Voice full volume range,"Within this many tiles, other players' voice chat plays at full volume. Further out it fades smoothly to silence at 'Voice hearing range'."
+VoiceMaxDistance,Voice hearing range,"Beyond this many tiles, voice chat is silent, and between 'Voice full volume range' and this it fades smoothly. Voice heard through a radio uses the radio's own range instead."
 Voice3D,Directional voice,On: voice chat sounds come from the speaker's direction.
 DisableRadioStaff,Block radio for all staff,On: players with any staff role can't transmit on in-game radios.
 DisableRadioAdmin,Block radio for admins,On: admins can't transmit on in-game radios.
@@ -105,17 +105,17 @@ Map,Map folders,"The map folders to load, separated by semicolons. The first one
 DoLuaChecksum,Check players' files match,On: players whose game or mod files don't match the server's are refused.
 WorkshopItems,Workshop item numbers,"Steam Workshop item numbers the server downloads at start, separated by semicolons. Each mod also needs its mod ID listed in 'Mod IDs'."
 SaveWorldEveryMinutes,Auto save (minutes),"Saves the loaded parts of the map every this many real minutes. 0 means only the normal saving, when areas unload."
-BackupsCount,Backups to keep,How many backup zip files of each kind to keep before old ones are deleted.
+BackupsCount,Backups to keep,"How many backups the server keeps of each kind: at startup, after a game version change, and on the backup timer. Each kind keeps its own set, so you can have up to three times this number, and when a set is full the oldest one is deleted."
 BackupsOnStart,Back up on start,On: a backup is made every time the server starts.
 BackupsOnVersionChange,Back up when version changes,On: a backup is made at start when the game version is different from the last run.
 BackupsPeriod,Timed backups (minutes),Makes a backup every this many real minutes while the server's running. 0 turns timed backups off.
 Seed,World seed,The world generation seed. The game only uses this when the world's generation data doesn't exist yet. Its tooltip says to delete map_worldgen.bin in the save to change it.
 PauseEmpty,Pause when empty,On: game time stops while nobody's online.
-SwitchZombiesOwnershipEachUpdate,Zombie control switching,Changes how the server hands control of each zombie between players' games when more than one player is online.
+SwitchZombiesOwnershipEachUpdate,Rotate zombie control,"On: with more than one player online, control of each zombie passes to the next connected player every 2 seconds, in turn. Off: each zombie is run by the player grabbing or chasing it, or else the nearest player."
 BloodSplatLifespanDays,Blood splat lifespan (unused server copy),The game uses the sandbox setting with the same name instead of this one.
-CarEngineAttractionModifier,Car engine zombie range,Scales how far a running car engine draws zombies. The game says lower values can help with lag.
+CarEngineAttractionModifier,Car noise range for zombies,"Multiplies how far a running car's noise reaches zombies, on top of 'Engine loudness to zombies'. Lower values make the noise pulse more often over a smaller area, and it never drops below a radius of 8, so 0 doesn't make cars silent."
 MultiplayerStatisticsPeriod,Multiplayer stats interval (seconds),"How often, in seconds, the server gathers multiplayer statistics. 0 turns statistics off."
-MaxPacketsPerSecond,Max network messages per second,The most network messages of one kind the server accepts from each player per second.
+MaxPacketsPerSecond,Packet limit per second,"The most packets of any one kind a player's game sends each second. Past the limit their game skips the extra packets, while the server only notes it in its debug log and doesn't kick anyone."
 UsePhysicsHitReaction,Ragdoll hit reactions,On: the server allows ragdoll physics reactions when characters are hit.
 BanKickGlobalSound,Thunder on ban or kick,On: everyone hears a thunder sound when a player who's online is banned or kicked.
 AntiCheatSafety,Anti-cheat: PvP safety,"What the server does when it catches someone breaking the PvP safety rules: ban, kick, log only, or nothing (Disabled)."
@@ -139,7 +139,7 @@ DisableTrailerTowing,Block trailer towing,On: players can't tow trailers in mult
 DisableBurntTowing,Block towing burnt wrecks,On: players can't tow burnt-out wrecks in multiplayer.
 SandboxVars.EnableVehicles,Cars spawn,Off: no cars spawn in newly explored areas.
 SandboxVars.CarSpawnRate,Car spawn rate,How many cars spawn in newly explored areas.
-SandboxVars.ZombieAttractionMultiplier,Car engine noise to zombies,Multiplies how loud car engines are to zombies.
+SandboxVars.ZombieAttractionMultiplier,Engine loudness to zombies,"Multiplies how loud every vehicle engine is to zombies. 1 is normal and 0 is quietest. Vehicles pick up a change when they next load or have a part changed, and 'Car noise range for zombies' multiplies on top of this on a server."
 SandboxVars.VehicleEasyUse,Easy car use,On: cars are unlocked and don't need keys to start.
 SandboxVars.InitialGas,Fuel in found cars,How full the tanks of found cars are.
 SandboxVars.LockedCar,Locked cars,How often found cars are locked.
@@ -174,23 +174,23 @@ SandboxVars.ZombieConfig.RallyTravelDistance,Distance to join a group,"How far, 
 SandboxVars.ZombieConfig.RallyGroupSeparation,Space between zombie groups,"How far apart, in tiles, separate zombie groups stay."
 SandboxVars.ZombieConfig.RallyGroupRadius,Zombie group spread,"How close, in tiles, group members stay to their group's leader."
 SandboxVars.ZombieConfig.ZombiesCountBeforeDelete,Zombie crowd limit,How many zombies can crowd one area before extra ones are deleted to save performance.
-SandboxVars.ZombieLore.Speed,Zombie speed,"How fast zombies move. Random mixes speeds using 'Sprinter percentage'. Each zombie's speed is set when it's created, so changing this affects zombies created after the change. Casual groups often pick Shamblers or Fast Shamblers; players report sprinters can desync in multiplayer."
+SandboxVars.ZombieLore.Speed,Zombie speed,"How fast zombies move. Random mixes speeds using 'Zombie sprinter percentage'. Each zombie's speed is set when it's created, so changing this affects zombies created after the change. Casual groups often pick Shamblers or Fast Shamblers; players report sprinters can desync in multiplayer."
 SandboxVars.ZombieLore.SprinterPercentage,Sprinter percentage,"When 'Zombie speed' is on Random, the percentage of zombies that sprint. The rest are shamblers or fast shamblers. Ignored for the other 'Zombie speed' choices."
 SandboxVars.ZombieLore.Strength,Zombie strength,How much damage zombies do per attack and how hard they push on doors.
 SandboxVars.ZombieLore.Toughness,Zombie toughness,How hard zombies are to kill.
 SandboxVars.ZombieLore.Transmission,Infection spread,"How the infection spreads: through blood and saliva, saliva only, everyone's already infected, or none."
 SandboxVars.ZombieLore.Mortality,Infection death time,How long an infected character has before the infection kills them. Never means the infection doesn't kill.
 SandboxVars.ZombieLore.Reanimate,Reanimation time,How long after death an infected body gets back up as a zombie.
-SandboxVars.ZombieLore.Cognition,Zombie cognition,"How smart zombies are, meaning whether they can open doors. Random uses 'Door opening percentage'."
+SandboxVars.ZombieLore.Cognition,Zombie cognition,"How smart zombies are, meaning whether they can open doors. Random uses 'Zombie door opening percentage'."
 SandboxVars.ZombieLore.DoorOpeningPercentage,Door opening percentage,"When 'Zombie cognition' is on Random, the percentage of zombies that can open doors. Ignored for the other 'Zombie cognition' choices."
 SandboxVars.ZombieLore.CrawlUnderVehicle,Zombies crawl under cars,How often zombies crawl under parked cars to reach you.
 SandboxVars.ZombieLore.Memory,Zombie memory,How long zombies keep chasing after they lose sight or sound of you.
 SandboxVars.ZombieLore.Sight,Zombie sight,How far zombies can see.
 SandboxVars.ZombieLore.Hearing,Zombie hearing,How far zombies can hear.
-SandboxVars.ZombieLore.SpottedLogic,New stealth system,"On: the newer stealth rules are used, so you can hide from zombies behind cars, and traits and weather matter."
+SandboxVars.ZombieLore.SpottedLogic,New stealth system,"On: zombies use the newer sight rules, where a car between a zombie and a player on foot blocks its view and some objects give cover to sneaking players. Off: the older rules, which weigh light, distance and movement differently. Traits, rain and fog count either way."
 SandboxVars.ZombieLore.ThumpNoChasing,Idle zombies bash things,On: wandering zombies that haven't noticed anyone can still bash doors and builds.
 SandboxVars.ZombieLore.ThumpOnConstruction,Zombies damage builds,On: zombies can damage and destroy things players have built.
-SandboxVars.ZombieLore.ActiveOnly,Zombie active time,"Whether zombies are fully active all the time (Both), only at night, or only by day. Inactive zombies are slower and chase less."
+SandboxVars.ZombieLore.ActiveOnly,Zombie active time,"When zombies are fully active: Both, Night or Day. Outside their active time they move as shamblers whatever 'Zombie speed' says, are a quarter as likely to spot players, and forget them quickly."
 SandboxVars.ZombieLore.TriggerHouseAlarm,Zombies set off alarms,On: zombies breaking windows can set off house alarms.
 SandboxVars.ZombieLore.ZombiesDragDown,Zombie drag down,On: a group of zombies attacking at once can drag a character down and kill them.
 SandboxVars.ZombieLore.ZombiesCrawlersDragDown,Crawlers help drag down,On: crawlers next to you also count towards being dragged down.
@@ -215,7 +215,7 @@ SandboxVars.WeaponLootNew,Melee weapon loot,"Loot amount for melee weapons in co
 SandboxVars.RangedWeaponLootNew,Ranged weapon loot,"Loot amount for guns and attachments in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
 SandboxVars.AmmoLootNew,Ammo loot,"Loot amount for ammo, boxes and magazines in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
 SandboxVars.MechanicsLootNew,Mechanics loot,"Loot amount for car parts and their tools in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
-SandboxVars.OtherLootNew,Other loot,"Loot amount in containers for everything not in another group. This also covers foraging in town and road zones. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.OtherLootNew,Other loot,How often items that don't fit any other loot category spawn in containers. None stops them spawning. Foraging in towns and along roads isn't tied to this: it follows Nature's Abundance.
 SandboxVars.ClothingLootNew,Clothing loot,"Loot amount for clothing in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
 SandboxVars.ContainerLootNew,Bag loot,"Loot amount for bags and cases in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
 SandboxVars.KeyLootNew,Key loot,"Loot amount for keys, key rings and locks in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant. This also sets the chance zombies and cars carry keys."
@@ -227,22 +227,22 @@ SandboxVars.FarmingLootNew,Farming loot,"Loot amount for seeds and farming tools
 SandboxVars.ToolLootNew,Tool loot,"Loot amount for other tools in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
 SandboxVars.RollsMultiplier,Loot rolls multiplier,Multiplies how many times each container's loot table is rolled. The game warns not to change this; high values can hurt performance.
 SandboxVars.LootItemRemovalList,Items that never spawn,"Item types, separated by commas, that never spawn as normal loot. Spaces are ignored. Foraging uses this list too."
-SandboxVars.RemoveStoryLoot,Keep removed items out of stories,On: items on the removal list or set to None also stay out of world story scenes.
-SandboxVars.RemoveZombieLoot,Keep removed items off zombies,On: items on the removal list or set to None aren't worn by or stuck in zombies.
+SandboxVars.RemoveStoryLoot,Keep removed items out of stories,"On: items on the loot removal list, or in a loot category set to None, also stay out of the random story scenes placed around the world. Off: those scenes can still place them."
+SandboxVars.RemoveZombieLoot,Keep removed items off zombies,On: weapons the game attaches to zombies skip any item on the loot removal list or in a loot category set to None. Clothing zombies wear isn't affected.
 SandboxVars.ZombiePopLootEffect,More loot near zombies,"Above 0, places with more zombies nearby get more loot, scaled by this number. 0 turns this off."
-SandboxVars.InsaneLootFactor,Insanely rare loot factor,The loot amount behind the Insanely Rare choice for Generators. In 42.21 no other setting uses this; the loot category amounts have their own fixed values. Not shown in the game's settings screens.
-SandboxVars.ExtremeLootFactor,Extremely rare loot factor,The loot amount behind the Extremely Rare choice for Generators. In 42.21 no other setting uses this; the loot category amounts have their own fixed values. Not shown in the game's settings screens.
-SandboxVars.RareLootFactor,Rare loot factor,The loot amount behind the Rare choice for Generators. In 42.21 no other setting uses this; the loot category amounts have their own fixed values. Not shown in the game's settings screens.
-SandboxVars.NormalLootFactor,Normal loot factor,The loot amount behind the Normal choice for Generators. In 42.21 no other setting uses this; the loot category amounts have their own fixed values. Not shown in the game's settings screens.
-SandboxVars.CommonLootFactor,Common loot factor,The loot amount behind the Common choice for Generators. In 42.21 no other setting uses this; the loot category amounts have their own fixed values. Not shown in the game's settings screens.
-SandboxVars.AbundantLootFactor,Abundant loot factor,The loot amount behind the Abundant choice for Generators. In 42.21 no other setting uses this; the loot category amounts have their own fixed values. Not shown in the game's settings screens.
-SandboxVars.SeenHoursPreventLootRespawn,No respawn where seen (hours),"Above 0, loot doesn't respawn in areas a player has seen within this many in-game hours. 48 is a common choice alongside loot respawn."
+SandboxVars.InsaneLootFactor,Insanely rare loot factor,The spawn multiplier for generators when 'Generators' is set to Insanely Rare. Nothing else in Build 42.21 reads this.
+SandboxVars.ExtremeLootFactor,Extremely rare loot factor,The spawn multiplier for generators when 'Generators' is set to Extremely Rare. Nothing else in Build 42.21 reads this.
+SandboxVars.RareLootFactor,Rare loot factor,The spawn multiplier for generators when 'Generators' is set to Rare. Nothing else in Build 42.21 reads this.
+SandboxVars.NormalLootFactor,Normal loot factor,The spawn multiplier for generators when 'Generators' is set to Normal. Nothing else in Build 42.21 reads this.
+SandboxVars.CommonLootFactor,Common loot factor,The spawn multiplier for generators when 'Generators' is set to Common. Nothing else in Build 42.21 reads this.
+SandboxVars.AbundantLootFactor,Abundant loot factor,The spawn multiplier for generators when 'Generators' is set to Abundant. Nothing else in Build 42.21 reads this.
+SandboxVars.SeenHoursPreventLootRespawn,No respawn where seen (hours),"Stops loot refilling in a town area if players have been there within this many in-game hours. 0 turns the check off, so areas refill on schedule even if players were just there. Only matters when 'Loot respawn (hours)' is above 0."
 SandboxVars.HoursForLootRespawn,Loot respawn (hours),"How often looted containers in towns refill, in in-game hours. Only containers that have been looted at least once refill, and 0 turns it off. It's off in every Build 42 preset; servers that use it often pick 168 to 720 hours (1 week to 1 month)."
 SandboxVars.MaxItemsForLootRespawn,Full container limit,Containers holding this many items or more don't refill.
 SandboxVars.ConstructionPreventsLootRespawn,No loot respawn in built areas,On: loot doesn't respawn in buildings players have barricaded or built in.
 SandboxVars.WorldItemRemovalList,Ground items to clear,"Item types, separated by commas, that are cleared from the ground a set number of hours after being dropped (see 'Ground item removal (hours)')."
-SandboxVars.HoursForWorldItemRemoval,Ground item removal (hours),"Hours after an item is dropped before it's removed, checked when that part of the map loads. 0 turns removal off."
-SandboxVars.ItemRemovalListBlacklistToggle,Reverse the ground clear list,"On: the list works the other way round, so everything not on 'Ground items to clear' is removed."
+SandboxVars.HoursForWorldItemRemoval,Ground item removal (hours),How many in-game hours an item has to lie on the ground before the removal list clears it. It goes the next time that part of the map loads.
+SandboxVars.ItemRemovalListBlacklistToggle,Reverse the ground clear list,"Off: items on the world item removal list are cleared from the ground once they've lain there long enough. On: the list becomes a keep list, and ground items that aren't on it are cleared instead."
 SandboxVars.GeneratorSpawning,Generators,"How often generators appear as loot, from none to abundant. This is the only setting that uses the six Loot Factor settings."
 SandboxVars.AnnotatedMapChance,Annotated maps,How often a found map has a dead survivor's notes on it.
 SandboxVars.HoursForCorpseRemoval,Corpse removal (hours),How many in-game hours before dead bodies disappear. 0 also stops maggots on corpses. Player bodies follow the server setting 'Remove player bodies too'.
@@ -387,8 +387,8 @@ SandboxVars.AttackBlockMovements,Melee swings slow you,On: swinging a melee weap
 SandboxVars.EnableTaintedWaterText,Tainted water tooltip,On: tainted water is labelled as tainted.
 SandboxVars.MultiHitZombies,Hit several zombies per swing,On: some melee weapons can hit several zombies in one swing.
 SandboxVars.RearVulnerability,Bites from behind,How likely a zombie attacking from behind is to bite.
-SandboxVars.WoundInfectionFactor,Infected wound damage,"Above 0, badly infected wounds also cause damage, scaled by this number."
-SandboxVars.FirearmUseDamageChance,Gun damage chance,"For guns, swaps the chance to hit for a chance to damage. Disabled turns this off; the other choices pick zombies only or all types of target."
+SandboxVars.WoundInfectionFactor,Infected wound damage,"Lets infected wounds hurt a character who's already at the worst level of sickness. 0 turns this damage off, and higher values make it kick in sooner."
+SandboxVars.FirearmUseDamageChance,Gun damage chance,"What happens when a gunshot fails its hit roll. Disabled: it misses. Zombies only: a zombie is still hit but takes no damage, and other targets are missed. All types of target: any target is still hit but takes no damage."
 SandboxVars.FirearmNoiseMultiplier,Gunshot noise range,Multiplies how far away zombies can hear gunshots.
 SandboxVars.FirearmJamMultiplier,Gun jam chance,Multiplies the chance guns jam. 0 means guns never jam.
 SandboxVars.FirearmMoodleMultiplier,Moodles affect aim,"Multiplies how much moodles (panic, tiredness and so on) hurt aim. 0 turns that off."
