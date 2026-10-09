@@ -29,7 +29,7 @@
         "UpdateSourcePlatform": "Windows",
         "UpdateSource": "Executable",
         "UpdateSourceData": "powershell.exe",
-        "UpdateSourceArgs": "-NoProfile -ExecutionPolicy Bypass -File \"{{$FullRootDir}}project-zomboid-plus-sandbox.ps1\" \"{{$FullBaseDir}}.\" \"{{servername}}\" \"{{SandboxControl}}\"",
+        "UpdateSourceArgs": "-NoProfile -ExecutionPolicy Bypass -File \"{{$FullRootDir}}easy-zomboid-server-sandbox.ps1\" \"{{$FullBaseDir}}.\" \"{{servername}}\" \"{{SandboxControl}}\"",
         "SkipOnFailure": false
     },
     {
@@ -37,7 +37,7 @@
         "UpdateSourcePlatform": "Linux",
         "UpdateSource": "Executable",
         "UpdateSourceData": "/bin/bash",
-        "UpdateSourceArgs": "\"{{$FullRootDir}}project-zomboid-plus-sandbox.sh\" \"{{$FullBaseDir}}.\" \"{{servername}}\" \"{{SandboxControl}}\"",
+        "UpdateSourceArgs": "\"{{$FullRootDir}}easy-zomboid-server-sandbox.sh\" \"{{$FullBaseDir}}.\" \"{{servername}}\" \"{{SandboxControl}}\"",
         "SkipOnFailure": false
     },
     {
@@ -45,7 +45,7 @@
         "UpdateSourcePlatform": "Windows",
         "UpdateSource": "Executable",
         "UpdateSourceData": "powershell.exe",
-        "UpdateSourceArgs": "-NoProfile -ExecutionPolicy Bypass -File \"{{$FullRootDir}}project-zomboid-plus-modcheck.ps1\" \"{{$FullBaseDir}}.\" \"{{servername}}\"",
+        "UpdateSourceArgs": "-NoProfile -ExecutionPolicy Bypass -File \"{{$FullRootDir}}easy-zomboid-server-modcheck.ps1\" \"{{$FullBaseDir}}.\" \"{{servername}}\"",
         "SkipOnFailure": true
     },
     {
@@ -53,7 +53,7 @@
         "UpdateSourcePlatform": "Linux",
         "UpdateSource": "Executable",
         "UpdateSourceData": "/bin/bash",
-        "UpdateSourceArgs": "\"{{$FullRootDir}}project-zomboid-plus-modcheck.sh\" \"{{$FullBaseDir}}.\" \"{{servername}}\"",
+        "UpdateSourceArgs": "\"{{$FullRootDir}}easy-zomboid-server-modcheck.sh\" \"{{$FullBaseDir}}.\" \"{{servername}}\"",
         "SkipOnFailure": true
     },
     {

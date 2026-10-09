@@ -19,6 +19,6 @@
         "ConfigFile": "Zomboid/Server/{{servername}}_AMPSandbox.lua",
         "ConfigType": "template",
         "AutoMap": true,
-        "ConfigFileTemplate": "project-zomboid-plus/amp-sandbox-template.lua"
+        "ConfigFileTemplate": "easy-zomboid-server/amp-sandbox-template.lua"
     }
 ]

@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "settings.csv"
-NAME = "project-zomboid-plus"
+NAME = "easy-zomboid-server"
 
 TABS = {
     "Server": "Server:dns",
@@ -96,7 +96,7 @@ def description(r):
     if "Unvisited areas only" in danger and "visited" not in said and "explored" not in said:
         parts.append("Only affects places nobody has visited yet; explored areas keep what they had.")
     if "New world only" in danger and "new world" not in said:
-        parts.append("Only used when a new world is created. Changing it later does nothing.")
+        parts.append("Only used when a new world is created. Changing this later does nothing.")
     if "Can wipe or reset" in danger:
         parts.append("Careful: changing this can make players lose or restart their local data.")
     if "No effect in 42.21" in danger and "no code" not in said:
@@ -106,10 +106,7 @@ def description(r):
     presets = preset_line(r)
     if presets:
         parts.append(presets)
-    note = r["verification"]
-    if "unverified:" in note:
-        parts.append("Not fully confirmed in the game code: " + note.split("unverified:", 1)[1].strip())
-    parts.append(f"Game setting: {r['table_path'].replace('SandboxVars.', '')}.")
+    parts.append(f"In the settings file: {r['table_path'].replace('SandboxVars.', '')}.")
     return " ".join(p for p in parts if p)
 
 
@@ -285,13 +282,14 @@ def template_fields():
             "DisplayName": "Admin password",
             "Category": tab, "Subcategory": start, "Order": 1,
             "Description": (
-                "Start here. Set this before the first start: the server will not start while it is empty. "
-                "It is the password for the in-game admin account (the username below), not the password players use to join. "
-                "The game resets the admin account to this password at every start, so this box is always the real password. "
-                "Change settings here, not in the game's files. AMP rewrites the files from these boxes at every start. "
-                "Each box saves when you click away from it and takes effect at the next start, so changing one while the server runs is safe. "
-                "Sandbox settings can also be changed in the game's admin menu: see 'Sandbox changes made in game' at the top of the World tab. "
-                "Mods' own sandbox settings are not in AMP: change those in the game's admin menu or its Manage Settings editor (see the World tab), and they are kept."
+                "Start here. Set this before the first start: the server won't start without it. "
+                "This is the password for your in-game admin account (the username below), not the one players use to join. "
+                "The game resets the admin account to this password every time the server starts, so this box always holds the real password. "
+                "Change settings here rather than in the game's files, because AMP rewrites those files from these boxes every time the server starts. "
+                "Each box saves when you click away from it and takes effect after a restart, so it's safe to change one while the server is running. "
+                "You can also change sandbox settings in the game's admin menu: see 'Sandbox changes made in game' at the top of the World tab. "
+                "Mod sandbox settings aren't in AMP. Change them in the game's admin menu or the Manage Settings editor (see the World tab). AMP never overwrites them. "
+                "Use a password you don't use anywhere else: anyone you give access to this server in AMP may be able to see it."
             ),
             "Keywords": "admin,password,adminpassword,start,first",
             "FieldName": "adminpassword", "ParamFieldName": "adminpassword",
@@ -300,8 +298,8 @@ def template_fields():
         },
         {
             "DisplayName": "Admin username",
-            "Category": tab, "Subcategory": start, "Order": 2,
-            "Description": "The name of the in-game admin account. The game creates it on the first start.",
+            "Category": tab, "Subcategory": start, "Order": 3,
+            "Description": "The name of your in-game admin account. The game creates it on the first start.",
             "Keywords": "admin,username,adminusername",
             "FieldName": "adminusername", "ParamFieldName": "adminusername",
             "InputType": "text", "Required": True,
@@ -309,10 +307,10 @@ def template_fields():
         },
         {
             "DisplayName": "Server save name (careful)",
-            "Category": tab, "Subcategory": start, "Order": 3,
+            "Category": tab, "Subcategory": start, "Order": 4,
             "Description": (
                 "The name the game uses for this server's settings files and world. "
-                "Changing it starts a brand new world with fresh settings files; the old world stays on disk under its old name. "
+                "Changing this starts a brand new world with fresh settings files. The old world stays on disk under its old name. "
                 "Use letters, numbers, dashes or underscores only."
             ),
             "Keywords": "server,name,servername,world,save",
@@ -322,16 +320,17 @@ def template_fields():
         },
         {
             "DisplayName": "Memory limit",
-            "Category": tab, "Subcategory": start, "Order": 4,
+            "Category": tab, "Subcategory": start, "Order": 5,
             "Description": (
-                "The most memory (RAM) the server may use. The game's default memory manager (ZGC) grows towards this limit "
-                "even when it does not need it, so leave room for the rest of the machine. "
-                "A vanilla server runs in 4096 MB; servers with many mods often need 6144 to 8192 MB."
+                "The most memory (RAM) the server can use. It starts at 3072 MB (3 GB), the same as the game's own server launcher. "
+                "For Build 42 we recommend at least 10240 MB (10 GB), adjusted for the mods you run. "
+                "The game's memory manager grows towards this limit whether it needs the memory or not, so leave enough for Windows "
+                "and anything else running on the machine. If the console shows OutOfMemoryError, raise this."
             ),
             "Keywords": "memory,ram,xmx,limit,heap",
             "FieldName": "MaxMemory", "ParamFieldName": "MaxMemory",
             "InputType": "number", "MinValue": 2048, "MaxValue": 65536, "Suffix": "MB",
-            "Required": True, "IncludeInCommandLine": False, "DefaultValue": "4096",
+            "Required": True, "IncludeInCommandLine": False, "DefaultValue": "3072",
         },
         {
             "DisplayName": "Sandbox changes made in game",
@@ -389,9 +388,9 @@ def template_fields():
             "DisplayName": "RCON from this machine only",
             "Category": tab, "Subcategory": rcon, "Order": 1,
             "Description": (
-                "RCON lets tools send admin commands to the server. It only runs when an RCON password is set below. "
-                "When this is on, RCON only accepts connections from the server machine itself, so it cannot be reached from the internet. "
-                "Turn it off only if a tool on another machine needs RCON."
+                "RCON lets other programs, like a Discord bot or an admin tool, send commands to the server using the RCON password (set in Start here). "
+                "When this is on, only programs on this server machine can use RCON, so nothing on your network or the internet can reach it. "
+                "Turn it off only if a program on another machine needs RCON, and keep the RCON port closed on your router."
             ),
             "Keywords": "rcon,local,loopback,security",
             "FieldName": "RconLocalOnly", "ParamFieldName": "RconLocalOnly",
@@ -414,6 +413,22 @@ def template_fields():
             "EnumValues": {"public": "Build 42 (normal)", "unstable": "Build 42 unstable (test builds)"},
         },
     ]
+
+
+def start_here_overrides(fields):
+    tab, start = section("Start here")
+    for f in fields:
+        if f.get("ParamFieldName") == "RCONPassword":
+            f.update({
+                "DisplayName": "RCON password",
+                "Category": tab, "Subcategory": start, "Order": 2, "Required": True,
+                "Description": (
+                    "Required. RCON lets other programs, like a Discord bot or an admin tool, send commands to the server using this password. "
+                    "Use a long password you don't use anywhere else: anyone you give access to this server in AMP may be able to see it, "
+                    "and the game keeps it in plain text in its settings file. "
+                    "By default only programs on this server machine can use RCON: see 'RCON from this machine only' in Remote admin (RCON)."
+                ),
+            })
 
 
 def mods_notes(fields):
@@ -537,11 +552,11 @@ def main():
         rows = list(csv.DictReader(f))
     fields, lua_lines = setting_fields(rows)
     mods_notes(fields)
+    start_here_overrides(fields)
     fields = template_fields() + fields
     tables = sorted({r["table_path"].split(".")[1] for r in rows
                      if r["file"] == "SandboxVars" and r["table_path"].count(".") > 1})
-    header = "-- Written by AMP at every start and added to the end of the sandbox file, so these values win.\n"
-    header += "".join(f"SandboxVars.{t} = SandboxVars.{t} or {{}}\n" for t in tables)
+    header = "".join(f"SandboxVars.{t} = SandboxVars.{t} or {{}}\n" for t in tables)
     (ROOT / f"{NAME}config.json").write_text(json.dumps(fields, indent=4, ensure_ascii=False) + "\n", encoding="utf-8")
     (ROOT / f"{NAME}sandbox.lua").write_text(header + "\n".join(lua_lines) + "\n", encoding="utf-8")
     (ROOT / f"{NAME}start.json").write_text(json.dumps(prestart_stages(rows), indent=4, ensure_ascii=False) + "\n", encoding="utf-8")

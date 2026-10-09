@@ -1,17 +1,17 @@
-# Zomboid AMP Template
+# Easy Zomboid Server (Build 42)
 
-A friendlier Project Zomboid (Build 42) template for [AMP](https://cubecoders.com/AMP), the game server control panel by CubeCoders.
+A Project Zomboid template for [AMP](https://cubecoders.com/AMP), the game server control panel by CubeCoders. For Build 42 dedicated servers only.
 
-**Status: early planning. Nothing here is ready to install yet.**
+**Status: built and being tested. Not ready to install yet.**
 
 ## The goal
 
-The most admin-friendly Project Zomboid template for AMP, with every setting checked against the game itself.
+Make running a Project Zomboid server easier, with every setting checked against the game itself.
 
 ## Planned
 
 - A plain-English explanation on every setting, grouped by what you're trying to do: joining, PvP, safehouses, zombies, world and time, loot, chat.
-- A label on every setting showing where it applies: single player, hosted or dedicated.
+- Settings the game no longer reads are grouped at the end, and settings that do nothing on a dedicated server say so.
 - Every sandbox setting lists its value in each of the game's five Build 42 presets, and the World tab explains how to apply a preset or change mods' settings with the game's own settings editor.
 - Warning labels on settings that only apply to a brand new world, or that can reset something.
 - A working player count on Build 42.
@@ -21,4 +21,6 @@ The most admin-friendly Project Zomboid template for AMP, with every setting che
 
 ## Licence
 
-To be decided.
+PolyForm Noncommercial 1.0.0, see [LICENSE.md](LICENSE.md).
+
+You're free to use, copy and change this template for personal and hobby use, and for use by charities, schools and other non-commercial organisations. Commercial use, including offering it as part of paid game server hosting, needs a separate paid licence. To ask, open an issue on this repository or email pippersgaming at gmail dot com.

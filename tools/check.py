@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-NAME = "project-zomboid-plus"
+NAME = "easy-zomboid-server"
 INPUT_TYPES = {"checkbox", "enum", "list", "number", "Password", "Radio", "RandomPassword",
                "range", "text", "Textarea", "URL", "UserPassword", "hidden"}
 BANNED = re.compile("[–—‘’“”]")
@@ -52,7 +52,7 @@ for f in fields:
                 problem(f"{where}: default {d} outside its range")
         except ValueError:
             problem(f"{where}: number default {d!r} is not a number")
-    if f.get("Required") and d == "" and name not in ("adminpassword",):
+    if f.get("Required") and d == "" and name not in ("adminpassword", "RCONPassword"):
         problem(f"{where}: Required but empty by default")
     for key in ("DisplayName", "Description"):
         if BANNED.search(f.get(key, "")):

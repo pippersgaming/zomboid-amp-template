@@ -1,4 +1,3 @@
--- Written by AMP at every start and added to the end of the sandbox file, so these values win.
 SandboxVars.Basement = SandboxVars.Basement or {}
 SandboxVars.Map = SandboxVars.Map or {}
 SandboxVars.MultiplierConfig = SandboxVars.MultiplierConfig or {}
