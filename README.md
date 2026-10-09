@@ -12,7 +12,7 @@ Make running a Project Zomboid server easier, with every setting checked against
 
 - A plain-English explanation on every setting, grouped by what you're trying to do: joining, PvP, safehouses, zombies, world and time, loot, chat.
 - Settings the game no longer reads are grouped at the end, and settings that do nothing on a dedicated server say so.
-- Every sandbox setting lists its value in each of the game's five Build 42 presets, and the World tab explains how to apply a preset or change mods' settings with the game's own settings editor.
+- The World tab explains how to apply one of the game's presets, or change mods' settings, with the game's own settings editor.
 - Warning labels on settings that only apply to a brand new world, or that can reset something.
 - A working player count on Build 42.
 - Spotting mods that need updating, and restarting with warnings.

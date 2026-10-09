@@ -1,0 +1,409 @@
+path,label,help
+Open,Open to anyone,"On: anyone can join, and their account is made the first time they log in with a password. Off: only people already on the whitelist (or allowed Steam IDs) can join. The Indie Stone's Build 42 multiplayer notes suggest a whitelisted server, so off."
+ServerWelcomeMessage,Welcome message,"The message shown in chat right after a player logs in. Use <LINE> for a new line and <RGB:1,0,0> for colour."
+DenyLoginOnOverloadedServer,Refuse logins when overloaded,"On: while the server is dropping network packets, new logins are refused with 'Server is too busy'."
+MaxPlayers,Maximum players,"How many players can be on at once. When it's full, new joiners are refused with 'ServerFull', or wait in the queue if 'Login queue' is on. The Indie Stone's Build 42 notes suggest 20 players or fewer."
+PingLimit,Ping limit (ms),"Players whose ping stays above this, in milliseconds, are kicked. 0 turns this off. Staff with the right permission are never kicked for lag."
+DropOffWhiteListAfterDeath,Remove from whitelist on death,"On: when a character dies, the player's account is taken off the whitelist. On a closed server ('Open to anyone' off) they can't come back without an admin."
+Password,Server password,A password everyone must type to join. Leave empty for no password. A /reloadoptions applies a new password without a restart.
+MaxAccountsPerUser,Accounts per Steam user,How many different accounts one Steam user can create here. 0 means no limit. Only checked when the server runs in Steam mode.
+AllowCoop,Split-screen players allowed,On: a player can bring extra split-screen players on the same PC. Off: only the first player on each PC can join.
+LoginQueueEnabled,Login queue,On: players joining a busy or full server wait in a queue instead of being refused. Staff with priority login skip ahead.
+LoginQueueConnectTimeout,Queue connect time (seconds),"Seconds a queued player gets to finish connecting when it's their turn, before the next person is let in."
+AllowNonAsciiUsername,Non-English letters in usernames,"On: usernames can use letters outside basic English, for example Cyrillic. Checked when an account logs in."
+Public,Listed publicly,On: the server is listed in the in-game public server browser.
+PublicName,Server name,"The server name shown in the in-game browser and the Steam browser, up to 64 characters."
+PublicDescription,Server description,"The description shown in the in-game public server browser, up to 256 characters."
+SteamScoreboard,Steam names in player list,On: the player list shows Steam names and avatars.
+SteamVAC,Steam VAC anti-cheat,On: Steam's VAC anti-cheat is switched on for this server. A -steamvac value on the command line overrides this.
+UPnP,Open router ports (UPnP),"On: the server asks your router to open its ports automatically when it starts. If the server hangs while starting, switch this off."
+server_browser_announced_ip,Announced IP address,Forces the IP address the server announces to the public list. Only needed when the machine has more than one address.
+DisplayUserName,Account names above heads,On: account names show above players' heads.
+ShowFirstAndLastName,Character names above heads,On: the character's first and last name show above their head.
+UsernameDisguises,Face coverings disguise names,On: a player whose face is covered shows a 'disguised' name instead of their own.
+HideDisguisedUserName,Hide disguised names fully,On: disguised players show no name at all instead of the 'disguised' label.
+SpawnPoint,Fixed spawn point,"Forces every new character to start at these x,y,z map coordinates. 0,0,0 means use the normal spawn choices."
+SpawnItems,Starting items,"Items every new character starts with, as item types separated by commas, for example Base.Axe,Base.Bag_BigHikingBag."
+NoFire,No fire (except campfires),"On: fire is disabled in multiplayer, except campfires."
+AllowDestructionBySledgehammer,Sledgehammer destruction,On: players can smash world objects and walls with a sledgehammer.
+SledgehammerOnlyInSafehouse,Sledgehammer only in own safehouse,On: players who aren't admins can only sledgehammer things inside their own safehouse. Needs 'Sledgehammer destruction' on.
+SleepAllowed,Sleeping allowed,"On: players can sleep in beds and cars, and when everyone online is asleep, time speeds up. Usually off on public servers."
+SleepNeeded,Sleep needed,On: characters get tired and must sleep. Only works when 'Sleeping allowed' is also on.
+KnockedDownAllowed,Players can be knocked down,On: players can be knocked down. The game marks this as work in progress that may cause position desync.
+SneakModeHideFromOtherPlayers,Sneaking hides from players,"On: a sneaking player is harder for other players to see, unless they're sprinting."
+UltraSpeedDoesnotAffectToAnimals,Animals ignore fast time,"On: animals aren't sped up while time runs very fast, for example while everyone sleeps."
+PlayerRespawnWithSelf,Respawn where you died,On: a player who dies can respawn at the spot where they died.
+PlayerRespawnWithOther,Respawn next to a partner,On: a player who dies can respawn next to a split-screen or Remote Play partner on the same PC.
+FastForwardMultiplier,Sleep time speed,How much faster time runs while every online player is asleep.
+ItemNumbersLimitPerContainer,Item limit per container,"The most items one container can hold, counting every small item such as each nail. 0 means no limit."
+RemovePlayerCorpsesOnCorpseRemoval,Remove player bodies too,On: dead players' bodies are also removed when the corpse removal timer in the sandbox settings clears bodies.
+TrashDeleteAll,Delete all button on bins,On: players get a 'delete all' button on bins.
+MouseOverToSeeDisplayName,Names only on mouse over,On: you only see another player's name when you point your mouse at them.
+HidePlayersBehindYou,Hide players behind you,"On: other players behind your character are hidden, the same way zombies you can't see are hidden."
+PlayerBumpPlayer,Players bump into each other,On: players running into each other bump and can knock each other over.
+MapRemotePlayerVisibility,Players shown on the map,"Which other players appear on the in-game map: 1 nobody, 2 faction and safehouse mates, 3 those plus players you can see, 4 everyone. Staff who can see the world map always see everyone."
+ShowCoordinates,Show map coordinates,On: players see their map coordinates in the lower right corner.
+PlayerSafehouse,Players can claim safehouses,On: players (and admins) can claim a building as their safehouse.
+AdminSafehouse,Only admins claim safehouses,On: only admins can claim safehouses.
+SafehouseAllowTrepass,Non-members can enter safehouses,On: people who aren't members can walk into a safehouse. Off: only members can. The game spells this setting Trepass.
+SafehouseAllowFire,Fire damages safehouses,On: fire can damage safehouses.
+SafehouseAllowLoot,Non-members can loot safehouses,On: people who aren't members can take items from a safehouse.
+SafehouseAllowRespawn,Respawn in your safehouse,On: a player who dies can respawn inside a safehouse they belonged to.
+SafehouseDaySurvivedToClaim,Days survived to claim a safehouse,In-game days a character must survive before they can claim a safehouse. 0 means straight away.
+SafeHouseRemovalTime,Unvisited safehouse removal (hours),Real-world hours a safehouse can go unvisited before it's removed. 0 turns removal off.
+SafehouseAllowNonResidential,Claim non-home buildings,On: players can also claim shops and other buildings that aren't homes.
+SafehouseDisableDisguises,No disguises in safehouses,On: name disguises don't work inside safehouses.
+MaxSafezoneSize,Largest safezone size,"The largest area a safezone claim can cover, as width times height in tiles. 0 means no limit."
+War,Safehouse wars,"On: safehouse wars can happen, and during a war safehouse protection is lifted."
+WarStartDelay,War warning time (seconds),Seconds of warning before a war begins.
+WarDuration,War length (seconds),"How long a war lasts, in seconds."
+WarSafehouseHitPoints,Safehouse hit points in war,The safehouse hit point limit used during wars.
+DisableSafehouseWhenOwnerConnected,Protection only while owner is offline,"On: a safehouse acts like a normal house while an owner is online, so its protection only applies while they're offline."
+Faction,Factions allowed,On: players can create factions.
+FactionDaySurvivedToCreate,Days survived to make a faction,In-game days a character must survive before creating a faction.
+FactionPlayersRequiredForTag,Members needed for a faction tag,How many members a faction needs before its owner can set a name tag.
+PVP,PvP,"On: players can hurt and kill each other. Usually off, or on with 'PvP safety switch' so PvP is opt-in."
+PVPLogToolChat,PvP reports in admin chat,On: PvP events are reported in admin chat.
+PVPLogToolFile,PvP events in log files,On: PvP events are written to the server log files.
+SafetySystem,PvP safety switch,"Only matters when PvP is on. On: each player chooses whether they're open to PvP, and someone can only be hurt if both players have it switched on. Off: everyone can hurt everyone."
+ShowSafety,Skull over PvP players,On: a skull shows over players who have PvP switched on.
+SafetyToggleTimer,PvP switch time,How long it takes to switch your PvP mode on or off.
+SafetyCooldownTimer,PvP switch cooldown,How long a player must wait before switching PvP mode again. Hitting another player adds to the wait.
+SafetyDisconnectDelay,PvP logout delay,"When a player leaves while a PvP timer is still running, their character stays behind for a delay based on this value, so leaving can't be used to escape a fight."
+PVPMeleeWhileHitReaction,Hit back straight away in PvP,On: a player who has just been hit by another player can swing back straight away.
+PVPMeleeDamageModifier,PvP melee damage,Damage multiplier for melee hits between players.
+PVPFirearmDamageModifier,PvP firearm damage,Damage multiplier for gun hits between players.
+GlobalChat,Global chat,On: the global /all chat channel is available.
+ChatStreams,Chat channels,"Which chat channels exist, as short codes separated by commas: s say, r radio, a admin, w whisper, y yell, sh safehouse, f faction, all global (only if 'Global chat' is on)."
+AnnounceDeath,Announce player deaths,On: a message goes to everyone in chat whenever a player dies.
+AnnounceAnimalDeath,Announce animal deaths,On: a message goes to everyone in chat whenever an animal dies.
+VoiceEnable,Voice chat,On: built-in voice chat is available.
+VoiceMinDistance,Voice minimum distance (tiles),The minimum distance in tiles for voice chat.
+VoiceMaxDistance,Voice range (tiles),The furthest distance in tiles at which voice chat can be heard.
+Voice3D,Directional voice,On: voice chat sounds come from the speaker's direction.
+DisableRadioStaff,Block radio for all staff,On: players with any staff role can't transmit on in-game radios.
+DisableRadioAdmin,Block radio for admins,On: admins can't transmit on in-game radios.
+DisableRadioGM,Block radio for GMs,On: GMs can't transmit on in-game radios.
+DisableRadioOverseer,Block radio for overseers,On: overseers can't transmit on in-game radios.
+DisableRadioModerator,Block radio for moderators,On: moderators can't transmit on in-game radios.
+DisableRadioInvisible,Block radio for invisible staff,On: invisible staff can't transmit on in-game radios.
+BadWordListFile,Banned words file,"Path to a text file of banned words, one per line, for the chat filter. The file is read once at start, so edits take effect after a restart."
+GoodWordListFile,Allowed words file,"Path to a text file of allowed words, one per line. The chat filter won't block these even if they contain a banned word. The file is read once at start, so edits take effect after a restart."
+BadWordPolicy,Banned word penalty,"What happens to someone who uses a banned word: they're banned, kicked, or the violation is just recorded. Their message is still sent, with the word replaced."
+BadWordReplacement,Banned word replacement,"The text that replaces a banned word in chat, up to 16 characters."
+ChatMessageCharacterLimit,Chat message length limit,"The longest chat message a player can type, in characters."
+ChatMessageSlowModeTime,Chat slow mode (seconds),How many seconds a player must wait between chat messages.
+DiscordEnable,Discord bot on,"On: the server's built-in Discord bot connects and relays chat. Read when the server starts, so changes take effect after a restart."
+DiscordToken,Discord bot token,The access token for the Discord bot the server logs in as. Keep this secret; the game leaves it out of the public option list.
+DiscordChatChannel,Discord chat channel,The Discord channel name (not the ID) for relaying chat. The bot uses the first text channel with this name.
+DiscordLogChannel,Discord log channel,The Discord channel name (not the ID) where the bot posts log messages.
+DiscordCommandChannel,Discord command channel,The Discord channel name (not the ID) where the bot listens for commands.
+WebhookAddress,Slack webhook address,"A Slack incoming webhook web address. When this is filled in, server events are posted there."
+RCONPassword,RCON password,The password for the remote console. Leave this empty and RCON stays off. Keep it secret.
+Mods,Mod IDs,"The mod IDs to load, separated by semicolons. Backslashes are removed before the list is read, so Build 42 IDs work with or without a leading backslash."
+Map,Map folders,"The map folders to load, separated by semicolons. The first one names the world map."
+DoLuaChecksum,Check players' files match,On: players whose game or mod files don't match the server's are refused.
+WorkshopItems,Workshop item numbers,"Steam Workshop item numbers the server downloads at start, separated by semicolons. Each mod also needs its mod ID listed in 'Mod IDs'."
+SaveWorldEveryMinutes,Auto save (minutes),"Saves the loaded parts of the map every this many real minutes. 0 means only the normal saving, when areas unload."
+BackupsCount,Backups to keep,How many backup zip files of each kind to keep before old ones are deleted.
+BackupsOnStart,Back up on start,On: a backup is made every time the server starts.
+BackupsOnVersionChange,Back up when version changes,On: a backup is made at start when the game version is different from the last run.
+BackupsPeriod,Timed backups (minutes),Makes a backup every this many real minutes while the server's running. 0 turns timed backups off.
+Seed,World seed,The world generation seed. The game only uses this when the world's generation data doesn't exist yet. Its tooltip says to delete map_worldgen.bin in the save to change it.
+PauseEmpty,Pause when empty,On: game time stops while nobody's online.
+SwitchZombiesOwnershipEachUpdate,Zombie control switching,Changes how the server hands control of each zombie between players' games when more than one player is online.
+BloodSplatLifespanDays,Blood splat lifespan (unused server copy),The game uses the sandbox setting with the same name instead of this one.
+CarEngineAttractionModifier,Car engine zombie range,Scales how far a running car engine draws zombies. The game says lower values can help with lag.
+MultiplayerStatisticsPeriod,Multiplayer stats interval (seconds),"How often, in seconds, the server gathers multiplayer statistics. 0 turns statistics off."
+MaxPacketsPerSecond,Max network messages per second,The most network messages of one kind the server accepts from each player per second.
+UsePhysicsHitReaction,Ragdoll hit reactions,On: the server allows ragdoll physics reactions when characters are hit.
+BanKickGlobalSound,Thunder on ban or kick,On: everyone hears a thunder sound when a player who's online is banned or kicked.
+AntiCheatSafety,Anti-cheat: PvP safety,"What the server does when it catches someone breaking the PvP safety rules: ban, kick, log only, or nothing (Disabled)."
+AntiCheatSpeed,Anti-cheat: speed,"What the server does when a player or vehicle moves faster than allowed: ban, kick, log only, or nothing (Disabled)."
+AntiCheatNoClip,Anti-cheat: walking through walls,"What the server does when a player walks through walls: ban, kick, log only, or nothing (Disabled). This is Disabled by default."
+AntiCheatHit,Anti-cheat: impossible hits,"What the server does about impossible hits (damage, distance, weapon and vehicle hits): ban, kick, log only, or nothing (Disabled)."
+AntiCheatPacketException,Anti-cheat: bad network messages,"What the server does about broken or unexpected network messages: ban, kick, log only, or nothing (Disabled). This is Disabled by default."
+AntiCheatPermission,Anti-cheat: role powers,"What the server does when someone uses powers their role doesn't have: ban, kick, log only, or nothing (Disabled)."
+AntiCheatXP,Anti-cheat: skill XP,"What the server does about impossible skill XP gains: ban, kick, log only, or nothing (Disabled). The allowed amount follows the XP multiplier settings."
+AntiCheatSafeHouse,Anti-cheat: safehouse actions,"What the server does about invalid safehouse actions (by owners, members or non-members): ban, kick, log only, or nothing (Disabled)."
+AntiCheatPlayer,Anti-cheat: player data,"What the server does about invalid player data or targets: ban, kick, log only, or nothing (Disabled)."
+AntiCheatChecksum,Anti-cheat: file check,"What the server does when a player's file check result changes during play: ban, kick, log only, or nothing (Disabled)."
+DisableScoreboard,Hide other players in list,On: the player list hides other players from each player.
+HideAdminsInPlayerList,Hide staff in player list,On: staff whose role allows hiding are left out of the player list.
+ClientCommandFilter,Command log filter,"Which client commands are left out of (minus) or kept in (plus) the cmd.txt log. Write rules like -vehicle.* and +vehicle.fixPart, separated by semicolons."
+ClientActionLogs,Logged player actions,"Which player actions are written to the client action log, as action names separated by semicolons."
+PerkLogs,Log skill level changes,On: skill level changes are written to the PerkLog log.
+SpeedLimit,Car speed limit (km/h),"The top speed for cars in multiplayer, in km/h. The speed anti-cheat uses the same number for vehicles."
+DisableVehicleTowing,Block car towing,On: players can't tow cars with cars in multiplayer.
+DisableTrailerTowing,Block trailer towing,On: players can't tow trailers in multiplayer.
+DisableBurntTowing,Block towing burnt wrecks,On: players can't tow burnt-out wrecks in multiplayer.
+SandboxVars.EnableVehicles,Cars spawn,Off: no cars spawn in newly explored areas.
+SandboxVars.CarSpawnRate,Car spawn rate,How many cars spawn in newly explored areas.
+SandboxVars.ZombieAttractionMultiplier,Car engine noise to zombies,Multiplies how loud car engines are to zombies.
+SandboxVars.VehicleEasyUse,Easy car use,On: cars are unlocked and don't need keys to start.
+SandboxVars.InitialGas,Fuel in found cars,How full the tanks of found cars are.
+SandboxVars.LockedCar,Locked cars,How often found cars are locked.
+SandboxVars.CarGasConsumption,Fuel use,Multiplies how fast cars burn fuel.
+SandboxVars.CarGeneralCondition,Found car condition,The general state of found cars' parts.
+SandboxVars.CarDamageOnImpact,Car crash damage,How much damage cars take in crashes.
+SandboxVars.DamageToPlayerFromHitByACar,Damage from being hit by a car,How much damage a character takes when hit by a car.
+SandboxVars.TrafficJam,Wrecked car traffic jams,On: traffic jams of wrecked cars appear on main roads in newly explored areas.
+SandboxVars.CarAlarm,Car alarms,How often found cars have a working alarm.
+SandboxVars.PlayerDamageFromCrash,Crashes hurt people inside,On: people inside a car can be hurt when it crashes.
+SandboxVars.SirenShutoffHours,Siren shutoff (hours),In-game hours before a wailing car siren switches itself off. 0 means it doesn't switch off on its own.
+SandboxVars.ChanceHasGas,Chance found cars have fuel,The chance a found car has any fuel at all.
+SandboxVars.RecentlySurvivorVehicles,Survivor cars,How often you find well kept cars that a survivor looked after.
+SandboxVars.SirenEffectsZombies,Sirens attract zombies,On: zombies head towards car sirens.
+SandboxVars.Zombies,Zombie count,"The overall zombie amount. In the game's own settings screens, picking this also sets 'Population multiplier', but here they're separate boxes, so set both. The game also uses this directly for how many zombies are inside buildings and how dense the map is. None turns zombies off. Normal is the usual choice."
+SandboxVars.Distribution,Zombie distribution,Urban Focused puts more zombies in towns. Uniform spreads them evenly over the map.
+SandboxVars.ZombieVoronoiNoise,Zombie group randomness,On: a little randomness is added to where zombie groups are placed in generated areas.
+SandboxVars.ZombieRespawn,Zombie respawn,"A shortcut in the game's own settings screens: picking this fills in 'Zombie respawn (hours)', 'Unseen time before respawn' and 'Zombie respawn share'. Here, set those three directly. None or Low is a common pick."
+SandboxVars.ZombieMigrate,Zombie migration,"A shortcut in the game's own settings screens: ticking this sets 'Zombie migration (hours)' to 12, and unticking sets 0. Here, set 'Zombie migration (hours)' directly."
+SandboxVars.ZombieConfig.PopulationMultiplier,Population multiplier,"The actual size of the zombie population the game uses. The game's settings screens use these values: Insane 2.5, Very High 1.6, High 1.2, Normal 0.65, Low 0.15, None 0."
+SandboxVars.ZombieConfig.PopulationStartMultiplier,Starting zombie population,Multiplies the zombie population on day one. After that it grows towards the peak (see 'Peak multiplier' and 'Peak day').
+SandboxVars.ZombieConfig.PopulationPeakMultiplier,Peak multiplier,Multiplies the zombie population on its peak day.
+SandboxVars.ZombieConfig.PopulationPeakDay,Peak day,The in-game day the zombie population reaches its peak.
+SandboxVars.ZombieConfig.RespawnHours,Zombie respawn (hours),How many in-game hours between zombie respawns into cleared areas. 0 means zombies don't respawn.
+SandboxVars.ZombieConfig.RespawnUnseenHours,Unseen time before respawn,How many in-game hours an area has to go unseen by players before zombies can respawn there.
+SandboxVars.ZombieConfig.RespawnMultiplier,Zombie respawn share,"What share of an area's population comes back each respawn, from 0 to 1."
+SandboxVars.ZombieConfig.RedistributeHours,Zombie migration (hours),How many in-game hours between zombies drifting into empty areas. 0 stops migration.
+SandboxVars.ZombieConfig.FollowSoundDistance,Zombie sound follow distance,"How far, in tiles, off-screen zombies travel towards a sound."
+SandboxVars.ZombieConfig.RallyGroupSize,Zombie group size,How many zombies like to gather into one wandering group. 0 or 1 turns grouping off.
+SandboxVars.ZombieConfig.RallyGroupSizeVariance,Zombie group size variation,"How much group size varies, as a percentage."
+SandboxVars.ZombieConfig.RallyTravelDistance,Distance to join a group,"How far, in tiles, zombies walk to join a group."
+SandboxVars.ZombieConfig.RallyGroupSeparation,Space between zombie groups,"How far apart, in tiles, separate zombie groups stay."
+SandboxVars.ZombieConfig.RallyGroupRadius,Zombie group spread,"How close, in tiles, group members stay to their group's leader."
+SandboxVars.ZombieConfig.ZombiesCountBeforeDelete,Zombie crowd limit,How many zombies can crowd one area before extra ones are deleted to save performance.
+SandboxVars.ZombieLore.Speed,Zombie speed,"How fast zombies move. Random mixes speeds using 'Sprinter percentage'. Each zombie's speed is set when it's created, so changing this affects zombies created after the change. Casual groups often pick Shamblers or Fast Shamblers; players report sprinters can desync in multiplayer."
+SandboxVars.ZombieLore.SprinterPercentage,Sprinter percentage,"When 'Zombie speed' is on Random, the percentage of zombies that sprint. The rest are shamblers or fast shamblers. Ignored for the other 'Zombie speed' choices."
+SandboxVars.ZombieLore.Strength,Zombie strength,How much damage zombies do per attack and how hard they push on doors.
+SandboxVars.ZombieLore.Toughness,Zombie toughness,How hard zombies are to kill.
+SandboxVars.ZombieLore.Transmission,Infection spread,"How the infection spreads: through blood and saliva, saliva only, everyone's already infected, or none."
+SandboxVars.ZombieLore.Mortality,Infection death time,How long an infected character has before the infection kills them. Never means the infection doesn't kill.
+SandboxVars.ZombieLore.Reanimate,Reanimation time,How long after death an infected body gets back up as a zombie.
+SandboxVars.ZombieLore.Cognition,Zombie cognition,"How smart zombies are, meaning whether they can open doors. Random uses 'Door opening percentage'."
+SandboxVars.ZombieLore.DoorOpeningPercentage,Door opening percentage,"When 'Zombie cognition' is on Random, the percentage of zombies that can open doors. Ignored for the other 'Zombie cognition' choices."
+SandboxVars.ZombieLore.CrawlUnderVehicle,Zombies crawl under cars,How often zombies crawl under parked cars to reach you.
+SandboxVars.ZombieLore.Memory,Zombie memory,How long zombies keep chasing after they lose sight or sound of you.
+SandboxVars.ZombieLore.Sight,Zombie sight,How far zombies can see.
+SandboxVars.ZombieLore.Hearing,Zombie hearing,How far zombies can hear.
+SandboxVars.ZombieLore.SpottedLogic,New stealth system,"On: the newer stealth rules are used, so you can hide from zombies behind cars, and traits and weather matter."
+SandboxVars.ZombieLore.ThumpNoChasing,Idle zombies bash things,On: wandering zombies that haven't noticed anyone can still bash doors and builds.
+SandboxVars.ZombieLore.ThumpOnConstruction,Zombies damage builds,On: zombies can damage and destroy things players have built.
+SandboxVars.ZombieLore.ActiveOnly,Zombie active time,"Whether zombies are fully active all the time (Both), only at night, or only by day. Inactive zombies are slower and chase less."
+SandboxVars.ZombieLore.TriggerHouseAlarm,Zombies set off alarms,On: zombies breaking windows can set off house alarms.
+SandboxVars.ZombieLore.ZombiesDragDown,Zombie drag down,On: a group of zombies attacking at once can drag a character down and kill them.
+SandboxVars.ZombieLore.ZombiesCrawlersDragDown,Crawlers help drag down,On: crawlers next to you also count towards being dragged down.
+SandboxVars.ZombieLore.ZombiesFenceLunge,Zombie lunge,On: zombies can lunge at you right after climbing a fence or window if you're standing too close.
+SandboxVars.ZombieLore.ZombiesArmorFactor,Zombie armour strength,Multiplies how much protection zombies get from armour they're wearing.
+SandboxVars.ZombieLore.ZombiesMaxDefense,Zombie armour cap (%),"The most protection, as a percentage, worn armour can give a zombie."
+SandboxVars.ZombieLore.ChanceOfAttachedWeapon,Zombies with stuck weapons (%),Percentage chance a zombie has a weapon stuck in it.
+SandboxVars.ZombieLore.ZombiesFallDamage,Zombie fall damage,Multiplies the damage zombies take from falling.
+SandboxVars.ZombieLore.DisableFakeDead,Fake dead zombies,"Whether some bodies that look dead get up and attack: world zombies only, world and combat zombies, or never."
+SandboxVars.ZombieLore.PlayerSpawnZombieRemoval,Clear zombies at spawn,"Clears zombies from where a new character spawns: the building and around it, the building, the room, or nowhere."
+SandboxVars.ZombieLore.FenceThumpersRequired,Zombies to damage fences,How many zombies it takes to start damaging a tall fence.
+SandboxVars.ZombieLore.FenceDamageMultiplier,Fence damage speed,How quickly zombies damage tall fences.
+SafehousePreventsLootRespawn,No loot respawn in safehouses,On: loot doesn't respawn inside claimed safehouses. Only matters when 'Loot respawn (hours)' is above 0.
+SandboxVars.FoodLootNew,Perishable food loot,"Loot amount for food that can rot in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.LiteratureLootNew,Other reading loot,"Loot amount for books, fliers and newspapers (not skill books) in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.SkillBookLoot,Skill book loot,"Loot amount for skill books in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.RecipeResourceLoot,Recipe item loot,"Loot amount for items that teach recipes in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.MedicalLootNew,Medical loot,"Loot amount for medicine, bandages and first aid tools in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.SurvivalGearsLootNew,Survival gear loot,"Loot amount for camping and fishing gear in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.CannedFoodLootNew,Non-perishable food loot,"Loot amount for canned and dried food and drinks in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.WeaponLootNew,Melee weapon loot,"Loot amount for melee weapons in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.RangedWeaponLootNew,Ranged weapon loot,"Loot amount for guns and attachments in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.AmmoLootNew,Ammo loot,"Loot amount for ammo, boxes and magazines in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.MechanicsLootNew,Mechanics loot,"Loot amount for car parts and their tools in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.OtherLootNew,Other loot,"Loot amount in containers for everything not in another group. This also covers foraging in town and road zones. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.ClothingLootNew,Clothing loot,"Loot amount for clothing in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.ContainerLootNew,Bag loot,"Loot amount for bags and cases in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.KeyLootNew,Key loot,"Loot amount for keys, key rings and locks in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant. This also sets the chance zombies and cars carry keys."
+SandboxVars.MediaLootNew,Media loot,"Loot amount for VHS tapes and CDs in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.MementoLootNew,Memento loot,"Loot amount for Spiffo items, plushies and keepsakes in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.CookwareLootNew,Cooking loot,"Loot amount for cooking items in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.MaterialLootNew,Material loot,"Loot amount for crafting and building materials in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.FarmingLootNew,Farming loot,"Loot amount for seeds and farming tools in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.ToolLootNew,Tool loot,"Loot amount for other tools in containers. 0 means none. The settings screen choices are 0.05 insanely rare, 0.2 extremely rare, 0.4 rare, 0.6 normal, 2 common and 3 abundant."
+SandboxVars.RollsMultiplier,Loot rolls multiplier,Multiplies how many times each container's loot table is rolled. The game warns not to change this; high values can hurt performance.
+SandboxVars.LootItemRemovalList,Items that never spawn,"Item types, separated by commas, that never spawn as normal loot. Spaces are ignored. Foraging uses this list too."
+SandboxVars.RemoveStoryLoot,Keep removed items out of stories,On: items on the removal list or set to None also stay out of world story scenes.
+SandboxVars.RemoveZombieLoot,Keep removed items off zombies,On: items on the removal list or set to None aren't worn by or stuck in zombies.
+SandboxVars.ZombiePopLootEffect,More loot near zombies,"Above 0, places with more zombies nearby get more loot, scaled by this number. 0 turns this off."
+SandboxVars.InsaneLootFactor,Insanely rare loot factor,The loot amount behind the Insanely Rare choice for Generators. In 42.21 no other setting uses this; the loot category amounts have their own fixed values. Not shown in the game's settings screens.
+SandboxVars.ExtremeLootFactor,Extremely rare loot factor,The loot amount behind the Extremely Rare choice for Generators. In 42.21 no other setting uses this; the loot category amounts have their own fixed values. Not shown in the game's settings screens.
+SandboxVars.RareLootFactor,Rare loot factor,The loot amount behind the Rare choice for Generators. In 42.21 no other setting uses this; the loot category amounts have their own fixed values. Not shown in the game's settings screens.
+SandboxVars.NormalLootFactor,Normal loot factor,The loot amount behind the Normal choice for Generators. In 42.21 no other setting uses this; the loot category amounts have their own fixed values. Not shown in the game's settings screens.
+SandboxVars.CommonLootFactor,Common loot factor,The loot amount behind the Common choice for Generators. In 42.21 no other setting uses this; the loot category amounts have their own fixed values. Not shown in the game's settings screens.
+SandboxVars.AbundantLootFactor,Abundant loot factor,The loot amount behind the Abundant choice for Generators. In 42.21 no other setting uses this; the loot category amounts have their own fixed values. Not shown in the game's settings screens.
+SandboxVars.SeenHoursPreventLootRespawn,No respawn where seen (hours),"Above 0, loot doesn't respawn in areas a player has seen within this many in-game hours. 48 is a common choice alongside loot respawn."
+SandboxVars.HoursForLootRespawn,Loot respawn (hours),"How often looted containers in towns refill, in in-game hours. Only containers that have been looted at least once refill, and 0 turns it off. It's off in every Build 42 preset; servers that use it often pick 168 to 720 hours (1 week to 1 month)."
+SandboxVars.MaxItemsForLootRespawn,Full container limit,Containers holding this many items or more don't refill.
+SandboxVars.ConstructionPreventsLootRespawn,No loot respawn in built areas,On: loot doesn't respawn in buildings players have barricaded or built in.
+SandboxVars.WorldItemRemovalList,Ground items to clear,"Item types, separated by commas, that are cleared from the ground a set number of hours after being dropped (see 'Ground item removal (hours)')."
+SandboxVars.HoursForWorldItemRemoval,Ground item removal (hours),"Hours after an item is dropped before it's removed, checked when that part of the map loads. 0 turns removal off."
+SandboxVars.ItemRemovalListBlacklistToggle,Reverse the ground clear list,"On: the list works the other way round, so everything not on 'Ground items to clear' is removed."
+SandboxVars.GeneratorSpawning,Generators,"How often generators appear as loot, from none to abundant. This is the only setting that uses the six Loot Factor settings."
+SandboxVars.AnnotatedMapChance,Annotated maps,How often a found map has a dead survivor's notes on it.
+SandboxVars.HoursForCorpseRemoval,Corpse removal (hours),How many in-game hours before dead bodies disappear. 0 also stops maggots on corpses. Player bodies follow the server setting 'Remove player bodies too'.
+SandboxVars.DaysForRottenFoodRemoval,Rotten food removal (days),How many in-game days after food rots before it's removed from the map. -1 means never.
+SandboxVars.MaximumLootedBuildingRooms,Largest building that can be pre-looted,Buildings with more rooms than this are never pre-looted or trashed.
+SandboxVars.BloodSplatLifespanDays,Blood splat lifespan (days),"Days before old blood splats are cleaned away, checked when that part of the map loads. 0 means they stay forever. This is the copy the game reads, not the server setting of the same name."
+SandboxVars.MaximumLooted,Highest pre-looted building chance,"The highest chance, in percent, that a building is already looted and trashed when it's first found."
+SandboxVars.DaysUntilMaximumLooted,Days to highest pre-looted chance,"How many days it takes to reach the 'Highest pre-looted building chance'. Before that, the chance grows day by day."
+SandboxVars.RuralLooted,Rural pre-looted chance multiplier,Multiplies the already-looted chance for buildings outside towns.
+SandboxVars.MaximumDiminishedLoot,Most loot lost over time (%),"The highest share of loot, in percent, that stops spawning as days pass."
+SandboxVars.DaysUntilMaximumDiminishedLoot,Days to most loot lost,How many days it takes to reach the 'Most loot lost over time (%)' amount.
+SandboxVars.DayLength,Day length,How long one in-game day lasts in real time. 2 hour days are a common choice for Build 42.
+SandboxVars.StartYear,Start year,"The year the world starts in, from 1993 up to 2092. Not shown in the game's settings screens."
+SandboxVars.StartMonth,Start month,The month the world starts in.
+SandboxVars.StartDay,Start day of the month,The day of the month the world starts on.
+SandboxVars.StartTime,Start hour,The hour of the day the world starts at.
+SandboxVars.DayNightCycle,Day and night cycle,"Normal days and nights, endless day, or endless night."
+SandboxVars.ErosionSpeed,Nature regrowth speed,"How many days until nature fully takes over (grass, vines and trees). This is fixed when the world is created, because the world keeps its own erosion file."
+SandboxVars.ErosionDays,Nature regrowth days,"A custom number of days for nature to fully take over. 0 uses 'Nature regrowth speed'. -1 stops nature growing at all, and that works on a running world too."
+SandboxVars.TimeSinceApo,Months since the outbreak,"How many months after the outbreak the world begins, from 0 to 12. This sets how overgrown the world is when it's created, and affects bodies and skeletons in areas when they're first loaded. It doesn't change the start date."
+SandboxVars.NightDarkness,Night darkness,"How dark nights are, from pitch black to bright."
+SandboxVars.NightLength,Length of nights,"How long nights are, from always night to always day. Not shown in the game's settings screens."
+SandboxVars.ClimateCycle,Weather pattern,"Normal weather, or weather locked to one state: no weather, endless rain, endless storm, endless snow or endless blizzard."
+SandboxVars.FogCycle,Fog pattern,"Normal fog, no fog, or endless fog."
+SandboxVars.Temperature,Temperature,Shifts how cold or hot the seasons are. Applied each time the world loads.
+SandboxVars.Rain,Rain,How often it rains.
+SandboxVars.NatureAbundance,Foraging finds,How many items players find when foraging.
+SandboxVars.MaxFogIntensity,Thickest fog on screen,Caps how thick fog can look on screen.
+SandboxVars.MaxRainFxIntensity,Heaviest rain on screen,Caps how heavy rain looks on screen.
+SandboxVars.EnableSnowOnGround,Snow on the ground,On: snow builds up on the ground. Off: snow still shows on plants and roofs.
+SandboxVars.MaximumRatIndex,Vermin level,How common and heavy rat and other vermin infestations are. 0 means none.
+SandboxVars.DaysUntilMaximumRatIndex,Days to full vermin level,How many days it takes for vermin to reach the 'Vermin level' you've set.
+SandboxVars.FishAbundance,Fish numbers,How many fish are in rivers and lakes.
+SandboxVars.ClayLakeChance,Clay by lakes chance,The chance that dirt by lakes is turned into clay when the world generates new ground.
+SandboxVars.ClayRiverChance,Clay by rivers chance,The chance that dirt by rivers is turned into clay when the world generates new ground.
+SandboxVars.WaterShut,Water shutoff range (single player),"A range for when tap water stops. Only the single player new game screen uses this, to roll a random day into 'Water shutoff day'. Servers read 'Water shutoff day' directly, and the Host screen hides this choice."
+SandboxVars.ElecShut,Power shutoff range (single player),"A range for when the power grid shuts off. Only the single player new game screen uses this, to roll a random day into 'Power shutoff day'. Servers read 'Power shutoff day' directly, and the Host screen hides this choice."
+SandboxVars.AlarmDecay,Alarm battery life,How long house alarm batteries last after the power goes. Rolled for each alarmed building when the map's building data is set up.
+SandboxVars.WaterShutModifier,Water shutoff day,"The day tap water stops, counted from the outbreak, so 'Months since the outbreak' counts towards it. -1 means water never stops. Utilities going off around 30 days is common."
+SandboxVars.ElecShutModifier,Power shutoff day,"The day the power grid shuts off, counted from the outbreak, so 'Months since the outbreak' counts towards it. -1 means it never shuts off. Utilities going off around 30 days is common."
+SandboxVars.AlarmDecayModifier,Alarm battery decay number,'Alarm battery life' is the one the game uses. Not shown in the game's settings screens.
+SandboxVars.GeneratorFuelConsumption,Generator fuel use,How much fuel a generator burns per in-game hour.
+SandboxVars.AllowExteriorGenerator,Generators work outdoors,"On: generators work outdoors, which lets them power things such as fuel pumps."
+SandboxVars.FuelStationGasInfinite,Endless fuel pumps,"On: fuel pumps never run dry. This overrides the pump minimum, maximum and empty chance settings."
+SandboxVars.FuelStationGasMin,Fuel pump lowest starting fill,"The lowest amount of fuel a pump starts with, from 0 (empty) to 1 (full)."
+SandboxVars.FuelStationGasMax,Fuel pump highest starting fill,"The highest amount of fuel a pump starts with, from 0 (empty) to 1 (full)."
+SandboxVars.FuelStationGasEmptyChance,Fuel pump empty chance,"The chance, in percent, that a fuel pump starts empty."
+SandboxVars.LightBulbLifespan,Light bulb lifespan,"How long light bulbs last. Higher lasts longer, and 0 means bulbs never break. Car headlights aren't affected."
+SandboxVars.GeneratorTileRange,Generator range (tiles),"How far, in tiles, a generator sends power sideways."
+SandboxVars.GeneratorVerticalPowerRange,Generator range (floors),How many floors above and below a generator get power.
+SandboxVars.Farming,Farming speed (old),"The old farming speed choice, hidden from the game's settings screens. 'Farming speed', the number box, is the one used."
+SandboxVars.CompostTime,Compost time,"How long food takes to turn into compost, from 1 to 12 weeks."
+SandboxVars.FoodRotSpeed,Food spoilage speed,"How fast food spoils, in or out of a fridge."
+SandboxVars.FridgeFactor,Fridge effectiveness,How well fridges keep food fresh. No decay means chilled food never spoils.
+SandboxVars.PlantResilience,Crop toughness,How much water crops lose each day and how well they resist disease.
+SandboxVars.PlantAbundance,Harvest size (old),"The old harvest size choice, hidden from the game's settings screens. 'Harvest size', the number box, is the one used."
+SandboxVars.AnimalStatsModifier,Animal hunger and thirst,How fast animals get hungry and thirsty.
+SandboxVars.AnimalMetaStatsModifier,Animal hunger when unwatched,How fast animals get hungry and thirsty while nobody's nearby. Not shown in the game's settings screens.
+SandboxVars.AnimalPregnancyTime,Animal pregnancy time,How long animal pregnancies last.
+SandboxVars.AnimalAgeModifier,Animal ageing speed,How fast animals age.
+SandboxVars.AnimalMilkIncModifier,Milk build-up speed,How fast animals build up milk.
+SandboxVars.AnimalWoolIncModifier,Wool growth speed,How fast animals grow wool.
+SandboxVars.AnimalRanchChance,Farms start with animals,How often farms start with animals.
+SandboxVars.AnimalGrassRegrowTime,Grass regrowth (hours),In-game hours for grass to grow back after animals eat it or it's cut.
+SandboxVars.AnimalMetaPredator,Unseen fox takes chickens,On: an unseen fox may take chickens if the hutch door is left open at night.
+SandboxVars.AnimalMatingSeason,Breeding season,On: animals only breed and lay in their season. Off: all year.
+SandboxVars.AnimalEggHatch,Egg hatch time,How long eggs take to hatch.
+SandboxVars.AnimalSoundAttractZombies,Animal noise draws zombies,On: animal noises draw nearby zombies.
+SandboxVars.AnimalTrackChance,Animal tracks,How often wild animals leave tracks.
+SandboxVars.AnimalPathChance,Animal paths,How often animal paths for hunting are created when the world generates new areas.
+SandboxVars.EnablePoisoning,Players can poison food,"Whether players can add poison to food: True for yes, False for no, or yes except bleach."
+SandboxVars.MaggotSpawn,Maggots on corpses,"Where maggots can appear on corpses: in and around bodies, in bodies only, or never."
+SandboxVars.KillInsideCrops,Indoor crops die,On: crops and herbs grown indoors die. House plants aren't affected.
+SandboxVars.PlantGrowingSeasons,Growing seasons,On: seasons affect crop growth and which months you can sow.
+SandboxVars.PlaceDirtAboveground,Farming above ground floor,On: players can farm above the ground floor. The game warns this can hurt performance.
+SandboxVars.FarmingSpeedNew,Farming speed,Multiplies how fast crops grow.
+SandboxVars.FarmingAmountNew,Harvest size,Multiplies how much a crop gives at harvest.
+SandboxVars.MaximumFireFuelHours,Most fuel in a fire (hours),The most hours of fuel a campfire or stove can hold.
+SandboxVars.StatsDecrease,"Hunger, thirst and tiredness speed","How fast hunger, thirst and tiredness build up."
+SandboxVars.StarterKit,Starter kit,"On: new characters start with chips, a water bottle, a small backpack, a baseball bat and a hammer."
+SandboxVars.Nutrition,Nutrition,On: what characters eat affects their weight and health.
+SandboxVars.EndRegen,Endurance recovery,How fast characters get their breath back after effort.
+SandboxVars.CharacterFreePoints,Extra trait points,Extra trait points at character creation. A negative number gives fewer.
+SandboxVars.AllClothesUnlocked,All clothing unlocked,On: every clothing item can be picked at character creation.
+SandboxVars.MetaKnowledge,Unseen media in media list,"How the media list shows media your players haven't seen yet: fully revealed, shown as ???, or completely hidden."
+SandboxVars.SeeNotLearntRecipe,See unlearnt recipes,On: players can see recipes at a crafting station before they've learnt them.
+SandboxVars.LevelForMediaXPCutoff,Media XP level cap,"From this skill level up, TV, VHS and other media stop giving XP for that skill."
+SandboxVars.LevelForDismantleXPCutoff,Scrapping XP level cap,"From this skill level up, scrapping furniture stops giving XP for that skill. Electrical isn't affected."
+SandboxVars.LiteratureCooldown,Re-reading cooldown (days),How many in-game days before re-reading the same magazine or book helps again.
+SandboxVars.NegativeTraitsPenalty,Negative traits penalty,Whether picking many negative traits gives fewer bonus points. None means no penalty.
+SandboxVars.MinutesPerPage,Minutes per skill book page,How many in-game minutes it takes to read one page of a skill book.
+SandboxVars.MuscleStrainFactor,Muscle strain,Multiplies muscle strain from swinging weapons and carrying heavy loads. 0 turns strain off.
+SandboxVars.DiscomfortFactor,Clothing discomfort,Multiplies discomfort from worn items. 0 turns discomfort off.
+SandboxVars.NoBlackClothes,No black clothes,On: randomly tinted clothes are never so dark they look black.
+SandboxVars.EasyClimbing,Easy climbing,On: climbing sheet ropes and walls never fails.
+SandboxVars.MultiplierConfig.Global,Global,"Multiplies XP for every skill, but only while the global multiplier is switched on. 1.5 to 2 is common; public listings advertise 2 to 3."
+SandboxVars.MultiplierConfig.GlobalToggle,Use the global multiplier,On: the global XP multiplier applies to every skill and the per-skill multipliers are ignored. Off: each skill uses its own multiplier.
+SandboxVars.MultiplierConfig.Fitness,Fitness,Multiplies XP for the Fitness skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Strength,Strength,Multiplies XP for the Strength skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Sprinting,Sprinting,Multiplies XP for the Sprinting skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Lightfoot,Lightfooted,Multiplies XP for the Lightfooted skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Nimble,Nimble,Multiplies XP for the Nimble skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Sneak,Sneaking,Multiplies XP for the Sneaking skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Axe,Axe,Multiplies XP for the Axe skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Blunt,Long blunt,Multiplies XP for the Long Blunt skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.SmallBlunt,Short blunt,Multiplies XP for the Short Blunt skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.LongBlade,Long blade,Multiplies XP for the Long Blade skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.SmallBlade,Short blade,Multiplies XP for the Short Blade skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Spear,Spear,Multiplies XP for the Spear skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Maintenance,Maintenance,Multiplies XP for the Maintenance skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Woodwork,Carpentry,Multiplies XP for the Carpentry skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Cooking,Cooking,Multiplies XP for the Cooking skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Farming,Agriculture,Multiplies XP for the Agriculture skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Doctor,First aid,Multiplies XP for the First Aid skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Electricity,Electrical,Multiplies XP for the Electrical skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.MetalWelding,Welding,Multiplies XP for the Welding skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Mechanics,Mechanics,Multiplies XP for the Mechanics skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Tailoring,Tailoring,Multiplies XP for the Tailoring skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Aiming,Aiming,Multiplies XP for the Aiming skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Reloading,Reloading,Multiplies XP for the Reloading skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Fishing,Fishing,Multiplies XP for the Fishing skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Trapping,Trapping,Multiplies XP for the Trapping skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.PlantScavenging,Foraging,Multiplies XP for the Foraging skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.FlintKnapping,Knapping,Multiplies XP for the Knapping skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Masonry,Masonry,Multiplies XP for the Masonry skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Pottery,Pottery,Multiplies XP for the Pottery skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Carving,Carving,Multiplies XP for the Carving skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Husbandry,Animal care,Multiplies XP for the Animal Care skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Tracking,Tracking,Multiplies XP for the Tracking skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Blacksmith,Blacksmithing,Multiplies XP for the Blacksmithing skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Butchering,Butchering,Multiplies XP for the Butchering skill. Only used when the global multiplier is switched off.
+SandboxVars.MultiplierConfig.Glassmaking,Glassmaking,Multiplies XP for the Glassmaking skill. Only used when the global multiplier is switched off.
+SandboxVars.ConstructionBonusPoints,Player-built construction strength,"Gives things players build extra hit points, so they last longer against zombies."
+SandboxVars.BoneFracture,Broken bones,"On: characters can break bones from falls, hits and crashes."
+SandboxVars.InjurySeverity,Injury severity,How bad injuries are and how long they take to heal.
+SandboxVars.DecayingCorpseHealthImpact,Rotting bodies affect health,How much rotting bodies nearby hurt a character's health and mood.
+SandboxVars.ZombieHealthImpact,Zombies affect health,On: living zombies nearby affect health and mood the same way rotting bodies do.
+SandboxVars.BloodLevel,Blood amount,"How much blood sprays onto floors and walls, from None to Ultra Gore."
+SandboxVars.ClothingDegradation,Clothing wear,How quickly clothes wear out and get dirty and bloody.
+SandboxVars.FireSpread,Fire spreads,On: fire spreads to nearby things.
+SandboxVars.AttackBlockMovements,Melee swings slow you,On: swinging a melee weapon slows you down.
+SandboxVars.EnableTaintedWaterText,Tainted water tooltip,On: tainted water is labelled as tainted.
+SandboxVars.MultiHitZombies,Hit several zombies per swing,On: some melee weapons can hit several zombies in one swing.
+SandboxVars.RearVulnerability,Bites from behind,How likely a zombie attacking from behind is to bite.
+SandboxVars.WoundInfectionFactor,Infected wound damage,"Above 0, badly infected wounds also cause damage, scaled by this number."
+SandboxVars.FirearmUseDamageChance,Gun damage chance,"For guns, swaps the chance to hit for a chance to damage. Disabled turns this off; the other choices pick zombies only or all types of target."
+SandboxVars.FirearmNoiseMultiplier,Gunshot noise range,Multiplies how far away zombies can hear gunshots.
+SandboxVars.FirearmJamMultiplier,Gun jam chance,Multiplies the chance guns jam. 0 means guns never jam.
+SandboxVars.FirearmMoodleMultiplier,Moodles affect aim,"Multiplies how much moodles (panic, tiredness and so on) hurt aim. 0 turns that off."
+SandboxVars.FirearmWeatherMultiplier,Weather affects aim,"Multiplies how much wind, rain and fog hurt aim. 0 turns that off."
+SandboxVars.FirearmHeadGearEffect,Headgear affects aim,On: headgear such as welding masks affects aim.
+SandboxVars.Map.AllowMiniMap,Mini-map allowed,On: players can open a mini-map.
+SandboxVars.Map.AllowWorldMap,World map allowed,On: players can open the full world map.
+SandboxVars.Map.MapAllKnown,Whole map revealed at start,On: the world map starts fully revealed.
+SandboxVars.Map.MapNeedsLight,Maps need light to read,On: maps can't be read in the dark.
+SandboxVars.Alarm,House alarms,How likely a house is to have an alarm. This is rolled for buildings when the map's building data is set up.
+SandboxVars.LockedHouses,Locked houses,How often house doors and windows are locked. Each door or window is set when it's first created from the map.
+SandboxVars.Helicopter,Helicopter event,"How often the helicopter event flies over. For Once, the day is picked when the world starts."
+SandboxVars.MetaEvent,Distant noise events,"How often far-off events like gunshots happen, drawing zombies."
+SandboxVars.SleepingEvent,Events while sleeping,"How often things happen while a character sleeps, such as nightmares or a break-in."
+SandboxVars.SurvivorHouseChance,Building stories,"How often buildings get a story set-up, such as burnt out, a stash or bodies. This is rolled the first time a building is loaded."
+SandboxVars.VehicleStoryChance,Road stories,"How often road stories appear, such as police roadblocks."
+SandboxVars.ZoneStoryChance,Zone stories,"How often scene stories appear in map zones, such as a forest campsite."
+SandboxVars.Basement.SpawnFrequency,Basements,Shown in the game's settings screens as how often basements appear.

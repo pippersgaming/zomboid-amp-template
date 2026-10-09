@@ -5,6 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "settings.csv"
+WORDING_FILE = ROOT / "data" / "wording.csv"
 NAME = "easy-zomboid-server"
 
 TABS = {
@@ -65,7 +66,19 @@ def readable(key):
     return words[0].upper() + words[1:]
 
 
+def load_wording():
+    if not WORDING_FILE.exists():
+        return {}
+    with WORDING_FILE.open(encoding="utf-8") as f:
+        return {w["path"]: w for w in csv.DictReader(f)}
+
+
+WORDING = load_wording()
+
+
 def plain_label(r):
+    if r["table_path"] in WORDING:
+        return WORDING[r["table_path"]]["label"]
     label = r["game_label"]
     if not label or "(the Host screen shows the key name)" in label:
         label = readable(r["table_path"].split(".")[-1])
@@ -83,52 +96,31 @@ def display_name(r):
         tags.append("can wipe or reset")
     if r["table_path"].startswith("SandboxVars.MultiplierConfig.") and "multiplier" not in label.lower():
         label += " XP multiplier"
-    if tags:
+    if tags and label.endswith(")"):
+        label = label[:-1] + ", " + ", ".join(tags) + ")"
+    elif tags:
         label += " (" + ", ".join(tags) + ")"
     return label
 
 
 def description(r):
-    explanation = r["plain_explanation"].strip()
+    wording = WORDING.get(r["table_path"])
+    explanation = wording["help"].strip() if wording else r["plain_explanation"].strip()
     said = explanation.lower()
     parts = [explanation]
     danger = r["danger_labels"]
     if "Unvisited areas only" in danger and "visited" not in said and "explored" not in said:
-        parts.append("Only affects places nobody has visited yet; explored areas keep what they had.")
+        parts.append("This only affects places nobody has visited yet. Explored areas keep what they had.")
     if "New world only" in danger and "new world" not in said:
         parts.append("Only used when a new world is created. Changing this later does nothing.")
     if "Can wipe or reset" in danger:
-        parts.append("Careful: changing this can make players lose or restart their local data.")
+        parts.append("Careful: changing this can make players lose their local data or start it again.")
     if "No effect in 42.21" in danger and "no code" not in said:
-        parts.append("No code in game version 42.21 reads this setting, so changing it does nothing.")
-    if r["recommended_for"]:
+        parts.append("The game (version 42.21) doesn't use this setting, so changing it does nothing.")
+    if r["recommended_for"] and not wording:
         parts.append(r["recommended_for"].strip())
-    presets = preset_line(r)
-    if presets:
-        parts.append(presets)
     parts.append(f"In the settings file: {r['table_path'].replace('SandboxVars.', '')}.")
     return " ".join(p for p in parts if p)
-
-
-PRESETS = [("Apocalypse", "Apocalypse"), ("Outbreak", "Outbreak"), ("Rising", "Rising"),
-           ("Extinction", "Extinction"), ("SixMonthsLater", "Six Months Later")]
-
-
-def shown_value(r, value):
-    if r["type"] == "boolean":
-        return "on" if value.lower() == "true" else "off"
-    if r["type"] == "choice" and "=" in r["choices"]:
-        return parse_choices(r["choices"]).get(value, value)
-    return value
-
-
-def preset_line(r):
-    if r["file"] != "SandboxVars" or not r["preset_Apocalypse"]:
-        return ""
-    values = [(label, r[f"preset_{key}"]) for key, label in PRESETS]
-    if len({v for _, v in values}) == 1:
-        return f"Same in all five game presets: {shown_value(r, values[0][1])}."
-    return "Game presets: " + ", ".join(f"{label} {shown_value(r, v)}" for label, v in values) + "."
 
 
 def number(text):
@@ -138,6 +130,15 @@ def number(text):
 
 
 def parse_choices(text):
+    run = re.fullmatch(r"(\d+)=(\d+)( \w+)?, \d+=\d+(?: \w+)?, and so on up to (\d+)=\d+(?: \w+)?", text.strip())
+    if run:
+        first, start, unit, last = int(run.group(1)), int(run.group(2)), (run.group(3) or "").strip(), int(run.group(4))
+        out = {}
+        for value in range(first, last + 1):
+            n = start + value - first
+            word = unit[:-1] if unit.endswith("s") and n == 1 else unit
+            out[str(value)] = f"{n} {word}".strip()
+        return out
     out = {}
     for part in text.split("; "):
         value, label = part.split("=", 1)
@@ -252,12 +253,11 @@ def template_fields():
             "DisplayName": "Show players in AMP",
             "Category": tab, "Subcategory": start, "Order": 6,
             "Description": (
-                "Build 42 no longer prints joins and leaves to the console, so AMP shows 0 players. "
-                "This is on by default: the server starts with the game's detailed log, which prints a line for each join and leave. "
-                "AMP then shows who is online, the kick and ban buttons work, and AMP's 'last player leaves' tasks work. "
-                "The detailed log also prints player IP addresses and RCON passwords; this template hides both in AMP's console, "
-                "but the game's own server-console.txt file still has them, so only give file access to people you trust. "
-                "It also adds some extra lines to the console."
+                "On: AMP shows who's online, and its kick and ban buttons and 'last player leaves' tasks work. "
+                "Build 42 no longer prints joins and leaves to the console, so without this AMP always shows 0 players. "
+                "This starts the server with the game's detailed log, which also prints player IP addresses and RCON passwords. "
+                "AMP's console hides both, but the game's own server-console.txt file still has them, so only give file access to people you trust. "
+                "The detailed log adds some extra lines to the console too."
             ),
             "Keywords": "players,online,count,tracking,join,leave,debuglog",
             "FieldName": "PlayerTracking", "ParamFieldName": "PlayerTracking",
@@ -268,10 +268,10 @@ def template_fields():
             "DisplayName": "Mod update warning",
             "Category": tab, "Subcategory": mods, "Order": 4,
             "Description": (
-                "Sent to everyone in game whenever the server reports that a Workshop mod has an update. "
-                "The server only checks when it is told to: in AMP, open Schedule and add a task that sends the console command "
-                "checkModsNeedUpdate every 10 or 15 minutes. Then restart when it suits you (players with the new version cannot join "
-                "until the server restarts). Leave empty to send no message."
+                "The message everyone in game sees when the server finds a Workshop mod update. "
+                "The server only checks when it's told to: in AMP, open Schedule and add a task that sends the console command "
+                "checkModsNeedUpdate every 10 or 15 minutes. Players who already have the new version can't join until the server restarts, "
+                "so restart when it suits you. Leave this empty to send no message."
             ),
             "Keywords": "mod,update,workshop,warning,restart,checkmodsneedupdate",
             "FieldName": "ModUpdateMessage", "ParamFieldName": "ModUpdateMessage",
@@ -336,23 +336,20 @@ def template_fields():
             "DisplayName": "Sandbox changes made in game",
             "Category": world, "Subcategory": sandbox, "Order": 1,
             "Description": (
-                "Presets and mods' sandbox settings: use the game's own settings editor. On your PC, open Project Zomboid, click HOST, then Manage settings, "
-                "then Create New Settings (or Edit Selected Settings). Name the settings the same as this server's save name so nothing needs renaming. "
-                "Choose the same mods as this server, use Apply Preset if you want a preset, change any setting, game or mod, and save. "
-                "The game saves it in the Zomboid\\Server folder in your user folder. Stop this server, then in the File Manager upload only the saved "
-                "servertest_SandboxVars.lua (your save name in place of servertest) to Zomboid/Server, replacing the old one, and start. "
-                "Leave the .ini it also saves: AMP's own boxes set those settings. "
-                "With Last change wins the uploaded settings are kept; with AMP always wins, AMP's sandbox boxes replace them. "
-                "Then import as described below so these boxes match. "
-                "This setting decides who wins when a sandbox setting (zombies, loot, world and so on) is changed both here and in the game's admin menu. "
-                "Last change wins: at each start, only the boxes you changed here since the last start are applied; everything else keeps the game's value, "
-                "including changes made in game. "
-                "AMP always wins: every sandbox box is applied at each start, so in-game changes last until the next restart. "
-                "Mods' own sandbox settings are always kept, whichever you pick. "
-                "To make these boxes show what the game is really using (after changes in game, or after bringing in an existing world): "
-                "start the server once, then in the File Manager right click Zomboid/Server/servertest_SandboxImport.ini (your save name in place of servertest) and choose Import. "
-                "That file is refreshed at every start. "
-                "An existing world is safe: on its first start here, nothing from AMP is applied to it until you import or change a box."
+                "Decides who wins when a sandbox setting (zombies, loot, world and so on) is changed both here and in the game's admin menu. "
+                "Last change wins: when the server starts, only the boxes you've changed here since the last start are applied, so changes made in game are kept. "
+                "AMP always wins: every sandbox box is applied each time the server starts, so changes made in game only last until a restart. "
+                "Mod sandbox settings are never touched, whichever you pick. "
+                "To make these boxes match what the game is really using, after changes in game or after bringing in a world: start the server once, "
+                "then in the File Manager right click Zomboid/Server/servertest_SandboxImport.ini (your save name in place of servertest) and choose Import. "
+                "A world you bring in is safe: on its first start here, nothing from AMP is applied to it until you import or change a box. "
+                "Presets and mod settings: use the game's own settings editor. On your PC, open Project Zomboid, click HOST, then Manage settings, "
+                "then Create New Settings or Edit Selected Settings. Give it the same name as this server's save name. "
+                "Choose the same mods as this server, use Apply Preset if you want one, change anything you like, and save. "
+                "It's saved in the Zomboid\\Server folder in your user folder. Stop this server, upload only the saved servertest_SandboxVars.lua "
+                "to Zomboid/Server in the File Manager, replacing the old one, then start and import as above. "
+                "Leave the .ini it also saves, because AMP's own boxes set those settings. "
+                "With AMP always wins, AMP's boxes replace the uploaded sandbox settings."
             ),
             "Keywords": "sandbox,in game,admin menu,sync,control,overwrite",
             "FieldName": "SandboxControl", "ParamFieldName": "SandboxControl",
@@ -362,7 +359,7 @@ def template_fields():
         {
             "DisplayName": "Memory manager (Java garbage collector)",
             "Category": tab, "Subcategory": java, "Order": 1,
-            "Description": "ZGC is what the game's own launcher uses on Windows 10 and later. G1GC uses less memory up front and suits older systems.",
+            "Description": "ZGC is what the game's own launcher uses on Windows 10 and later, and G1GC is what it uses on older Windows. ZGC grows towards the memory limit even when it doesn't need the memory.",
             "Keywords": "java,gc,zgc,g1gc,garbage,collector",
             "FieldName": "JavaGC", "ParamFieldName": "JavaGC",
             "InputType": "enum", "IncludeInCommandLine": False, "DefaultValue": "-XX:+UseZGC",
@@ -371,7 +368,7 @@ def template_fields():
         {
             "DisplayName": "Extra Java options",
             "Category": tab, "Subcategory": java, "Order": 2,
-            "Description": "Added to the Java part of the start command. Leave empty unless a guide tells you what to add.",
+            "Description": "Added to the Java part of the start command. Leave this empty unless a guide tells you what to add.",
             "Keywords": "java,arguments,options,jvm",
             "FieldName": "CustomJavaArgs", "ParamFieldName": "CustomJavaArgs",
             "InputType": "text", "IncludeInCommandLine": False, "DefaultValue": "",
@@ -379,7 +376,7 @@ def template_fields():
         {
             "DisplayName": "Extra server options",
             "Category": tab, "Subcategory": java, "Order": 3,
-            "Description": "Added to the end of the start command, for example -ip 192.168.1.10 to bind one network address. Leave empty unless you need it.",
+            "Description": "Added to the end of the start command, for example -ip 192.168.1.10 to use one network address. Leave this empty unless you need it.",
             "Keywords": "server,arguments,options,ip",
             "FieldName": "CustomServerArgs", "ParamFieldName": "CustomServerArgs",
             "InputType": "text", "IncludeInCommandLine": False, "DefaultValue": "",
@@ -401,10 +398,9 @@ def template_fields():
             "DisplayName": "Game version",
             "Category": "Updates", "Subcategory": "Project Zomboid:download:1", "Order": 1,
             "Description": (
-                "Build 42 is the game's normal Steam version. Unstable gets test builds first; players must be on the same version to join. "
-                "After changing this, stop the server, click Update, then start it. "
-                "Build 41 worlds do not load in Build 42. "
-                "Mods do not go in AMP's own Steam Workshop box on this page: that box causes a Steam login loop. "
+                "Build 42 is the game's normal Steam version. Unstable gets test builds first, and players must be on the same version as the server to join. "
+                "After changing this, stop the server, click Update, then start it. Build 41 worlds don't load in Build 42. "
+                "Don't put mods in AMP's own Steam Workshop box on this page, because it causes a Steam login loop. "
                 "Add mods in Configuration, Server, Mods and map."
             ),
             "Keywords": "branch,beta,unstable,version,build,update,workshop",
@@ -435,23 +431,23 @@ def mods_notes(fields):
     notes = {
         "Mods": (
             "The mod IDs to load, separated by semicolons, for example ModA;ModB. "
-            "Each mod also needs its Workshop item number in the box below, or nothing loads. "
-            "One Workshop item can hold several mod IDs; list each one you want. "
-            "A backslash before an ID (\\ModA) is optional: the game removes backslashes before reading this list."
+            "Each mod also needs its Workshop item number in Workshop Items, or nothing loads. "
+            "One Workshop item can hold several mod IDs, so list each one you want. "
+            "A backslash before an ID (\\ModA) is optional, because the game removes backslashes before reading this list."
         ),
         "WorkshopItems": (
             "The Steam Workshop item numbers, separated by semicolons with no spaces. "
-            "Each number is at the end of the mod's Workshop page address, after id=. The game downloads these itself at start. "
-            "Do not use AMP's own Steam Workshop box on the Updates page."
+            "Each number is at the end of the mod's Workshop page address, after id=. The game downloads these itself when the server starts. "
+            "Don't use AMP's own Steam Workshop box on the Updates page."
         ),
         "Map": (
             "The map folders to load, separated by semicolons. Map mods go first and Muldraugh, KY goes last, "
-            "for example MapModA;Muldraugh, KY. This box must not be empty."
+            "for example MapModA;Muldraugh, KY. This can't be empty."
         ),
         "WebhookAddress": (
-            "A web address the server posts short messages to: when a player joins or leaves, anti-cheat reports, "
-            "and when the server is opened or closed. It works with a Discord webhook with no bot: in Discord, open the channel's "
-            "settings, Integrations, Webhooks, New Webhook, Copy Webhook URL, then paste it here and add /slack to the end."
+            "A web address the server posts short messages to: players joining and leaving, anti-cheat reports, "
+            "and the server opening or closing. It works with a Discord webhook, no bot needed: in Discord, open the channel's settings, "
+            "then Integrations, Webhooks, New Webhook, Copy Webhook URL. Paste it here and add /slack to the end."
         ),
     }
     for f in fields:

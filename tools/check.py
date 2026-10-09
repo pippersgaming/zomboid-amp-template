@@ -43,6 +43,8 @@ for f in fields:
         values = f["EnumValues"].values() if f["InputType"] == "checkbox" else f["EnumValues"].keys()
         if not f.get("EnumValues"):
             problem(f"{where}: no EnumValues")
+        elif len(f["EnumValues"]) < 2:
+            problem(f"{where}: only one choice")
         elif d not in values:
             problem(f"{where}: default {d!r} is not one of its options")
     if f["InputType"] == "number" and d != "":
