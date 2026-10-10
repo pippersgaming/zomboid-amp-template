@@ -50,6 +50,8 @@ SECTIONS = {
 NOT_USED = "Not used by the game in 42.21"
 
 GAME_MANAGED = {"ResetID", "ServerPlayerID"}
+NO_EFFECT_ON_SERVER = {"UsePhysicsHitReaction", "DenyLoginOnOverloadedServer", "DisableRadioOverseer",
+                       "SandboxVars.FarmingAmountNew", "SandboxVars.SleepingEvent"}
 PORT_FIELDS = {"DefaultPort": "$GamePort", "UDPPort": "$DirectPort", "RCONPort": "$RCONPort"}
 SECRET_KEYS = {"Password", "RCONPassword", "DiscordToken"}
 REQUIRED_INI = {"Map"}
@@ -201,7 +203,7 @@ def setting_fields(rows):
     for r in rows:
         key = r["key"]
         is_sandbox = r["file"] == "SandboxVars"
-        group = NOT_USED if "No effect in 42.21" in r["danger_labels"] else r["group"]
+        group = NOT_USED if "No effect in 42.21" in r["danger_labels"] or r["table_path"] in NO_EFFECT_ON_SERVER else r["group"]
         tab, sub = section(group)
         if not is_sandbox and key in GAME_MANAGED:
             continue
