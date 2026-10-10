@@ -23,4 +23,4 @@ Make running a Project Zomboid server easier, with every setting checked against
 
 PolyForm Noncommercial 1.0.0, see [LICENSE.md](LICENSE.md).
 
-You're free to use, copy and change this template for personal and hobby use, and for use by charities, schools and other non-commercial organisations. Commercial use, including offering it as part of paid game server hosting, needs a separate paid licence. To ask, open an issue on this repository or email pippersgaming at gmail dot com.
+You're free to use, copy and change this template for personal and hobby use, and for use by charities, schools and other non-commercial organisations. Commercial use, including offering it as part of paid game server hosting, needs a separate paid licence: open an issue on this repository to ask.
