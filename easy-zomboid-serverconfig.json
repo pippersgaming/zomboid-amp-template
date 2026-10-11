@@ -17,6 +17,23 @@
         }
     },
     {
+        "DisplayName": "Hide Steam IDs in AMP's console",
+        "Category": "Server:dns",
+        "Subcategory": "Start here:rocket_launch:1",
+        "Order": 7,
+        "Description": "On: players' Steam account numbers show as [hidden] in AMP's console, like their IP addresses. The game's own log files still have them. Turn this off if you need to see which Steam account a player used.",
+        "Keywords": "steam,id,steamid,privacy,hide,console",
+        "FieldName": "HideSteamIDs",
+        "ParamFieldName": "HideSteamIDs",
+        "InputType": "checkbox",
+        "IncludeInCommandLine": false,
+        "DefaultValue": "\\b7656119\\d{10}\\b",
+        "EnumValues": {
+            "False": "(?!)",
+            "True": "\\b7656119\\d{10}\\b"
+        }
+    },
+    {
         "DisplayName": "Mod update warning",
         "Category": "Server:dns",
         "Subcategory": "Mods and map:extension:4",

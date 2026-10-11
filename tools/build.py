@@ -50,6 +50,7 @@ SECTIONS = {
 NOT_USED = "Not used by the game in 42.21"
 
 GAME_MANAGED = {"ResetID", "ServerPlayerID"}
+STEAM_ID_PATTERN = r"\b7656119\d{10}\b"
 NO_EFFECT_ON_SERVER = {"UsePhysicsHitReaction", "DenyLoginOnOverloadedServer", "DisableRadioOverseer",
                        "SandboxVars.FarmingAmountNew", "SandboxVars.SleepingEvent"}
 PORT_FIELDS = {"DefaultPort": "$GamePort", "UDPPort": "$DirectPort", "RCONPort": "$RCONPort"}
@@ -265,6 +266,18 @@ def template_fields():
             "FieldName": "PlayerTracking", "ParamFieldName": "PlayerTracking",
             "InputType": "checkbox", "IncludeInCommandLine": False, "DefaultValue": "-debuglog=DetailedInfo",
             "EnumValues": {"False": "", "True": "-debuglog=DetailedInfo"},
+        },
+        {
+            "DisplayName": "Hide Steam IDs in AMP's console",
+            "Category": tab, "Subcategory": start, "Order": 7,
+            "Description": (
+                "On: players' Steam account numbers show as [hidden] in AMP's console, like their IP addresses. "
+                "The game's own log files still have them. Turn this off if you need to see which Steam account a player used."
+            ),
+            "Keywords": "steam,id,steamid,privacy,hide,console",
+            "FieldName": "HideSteamIDs", "ParamFieldName": "HideSteamIDs",
+            "InputType": "checkbox", "IncludeInCommandLine": False, "DefaultValue": STEAM_ID_PATTERN,
+            "EnumValues": {"False": "(?!)", "True": STEAM_ID_PATTERN},
         },
         {
             "DisplayName": "Mod update warning",
