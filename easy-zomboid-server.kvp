@@ -32,7 +32,7 @@ App.WindowsCommandLineArgs=--enable-native-access=ALL-UNNAMED --add-exports=java
 App.LinuxCommandLineArgs=--enable-native-access=ALL-UNNAMED --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED -Dfile.encoding=UTF-8 -Djava.awt.headless=true -Dzomboid.steam=1 -Dzomboid.znetlog=1 -Duser.home=./ -Xmx{{MaxMemory}}m {{JavaGC}} {{RconLocalOnly}} -XX:-OmitStackTraceInFastThrow -Djava.library.path=linux64/:natives/ -Djava.security.egd=file:/dev/urandom {{CustomJavaArgs}} -cp java/:java/*:projectzomboid.jar:./
 App.CommandLineArgs={{$PlatformArgs}} zombie.network.GameServer -port {{$GamePort}} -udpport {{$DirectPort}} {{$FormattedArgs}} {{PlayerTracking}} {{CustomServerArgs}}
 App.CommandLineParameterFormat=-{0} "{1}"
-App.CommandLineParameterDelimiter=
+App.CommandLineParameterDelimiter= 
 App.AppSettings={}
 App.EnvironmentVariables={"PATH":"{{$FullBaseDir}}jre64/bin:%PATH%","LD_LIBRARY_PATH":"{{$FullBaseDir}}linux64:{{$FullBaseDir}}natives:{{$FullBaseDir}}:{{$FullBaseDir}}jre64/lib:{{$FullBaseDir}}jre64/lib/amd64:%LD_LIBRARY_PATH%","LD_PRELOAD":"{{$FullBaseDir}}jre64/lib/libjsig.so","SteamAppId":"108600"}
 App.ExitMethod=String
@@ -61,7 +61,7 @@ Console.UserJoinRegex=^(?:LOG\s+:\s+DetailedInfo\s.*?>\s)?Player (?<username>.+)
 Console.UserLeaveRegex=^(?:LOG\s+:\s+DetailedInfo\s.*?>\s)?Disconnected player "(?<username>[^"]*)" -?\d+ .+$
 Console.UserChatRegex=^$
 Console.UpdateAvailableRegex=^$
-Console.FilterMatchRegex=Body='[^']*'|\b(?:\d{1,3}\.){3}\d{1,3}\b|{{HideSteamIDs}}
+Console.FilterMatchRegex=Body='.*'(?= Socket\[)|Body='[^']*'|\b(?:\d{1,3}\.){3}\d{1,3}\b|{{HideSteamIDs}}
 Console.FilterMatchReplacement=[hidden]
 Console.ThrowawayMessageRegex=^$
 Console.MetricsRegex=

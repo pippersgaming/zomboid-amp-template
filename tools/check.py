@@ -90,6 +90,8 @@ for retired in ("App.MonitorChildProcess=", "App.MonitorChildProcessWaitMs", "Co
                 "App.SteamWorkshopDownloadLocation", "App.RCONConnectRetrySeconds", "App.SteamForceLoginPrompt"):
     if retired in kvp:
         problem(f"kvp still has retired key {retired}")
+if not re.search(r"^App\.CommandLineParameterDelimiter= \r?$", kvp, re.M):
+    problem("kvp CommandLineParameterDelimiter must be one space, or AMP joins -adminpassword, -adminusername and -servername into one argument")
 
 if problems:
     print(f"{len(problems)} problem(s):")
