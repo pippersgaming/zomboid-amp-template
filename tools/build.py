@@ -297,14 +297,11 @@ def template_fields():
             "DisplayName": "Admin password",
             "Category": tab, "Subcategory": start, "Order": 1,
             "Description": (
-                "Start here. Set this before the first start: the server won't start without it. "
-                "This is the password for your in-game admin account (the username below), not the one players use to join. "
-                "The game resets the admin account to this password every time the server starts, so this box always holds the real password. "
-                "Change settings here rather than in the game's files, because AMP rewrites those files from these boxes every time the server starts. "
-                "Each box saves when you click away from it and takes effect after a restart, so it's safe to change one while the server is running. "
-                "You can also change sandbox settings in the game's admin menu: see 'Sandbox changes made in game' at the top of the World tab. "
-                "Mod sandbox settings aren't in AMP. Change them in the game's admin menu or the Manage Settings editor (see the World tab). AMP never overwrites them. "
-                "Use a password you don't use anywhere else: anyone you give access to this server in AMP may be able to see it."
+                "Required. The password for your in-game admin account (the username below), not the one players use to join. "
+                "The game resets the admin account to this password every time the server starts. "
+                "Use a password you don't use anywhere else: anyone you give access to this server in AMP may be able to see it. "
+                "Every box on these pages saves when you click away from it and takes effect after a restart. "
+                "Change server settings in these boxes, not in the game's .ini file, because AMP rewrites that file from them every time the server starts."
             ),
             "Keywords": "admin,password,adminpassword,start,first",
             "FieldName": "adminpassword", "ParamFieldName": "adminpassword",
@@ -314,7 +311,10 @@ def template_fields():
         {
             "DisplayName": "Admin username",
             "Category": tab, "Subcategory": start, "Order": 3,
-            "Description": "The name of your in-game admin account. The game creates it on the first start.",
+            "Description": (
+                "The name of your in-game admin account. The game creates it on the first start. "
+                "If your game is started in debug mode, only admin accounts can join: others see 'Debug connection is not allowed for non admin.'"
+            ),
             "Keywords": "admin,username,adminusername",
             "FieldName": "adminusername", "ParamFieldName": "adminusername",
             "InputType": "text", "Required": True,
@@ -337,7 +337,8 @@ def template_fields():
             "DisplayName": "Memory limit",
             "Category": tab, "Subcategory": start, "Order": 5,
             "Description": (
-                "The most memory (RAM) the server can use. It starts at 3072 MB (3 GB), the same as the game's own server launcher. "
+                "The most memory (RAM) the server can use. It starts at 3072 MB (3 GB). "
+                "The game's own dedicated server files give two figures: 3 GB in ProjectZomboid64.json, and 16 GB in StartServer64.bat on Windows. "
                 "For Build 42 we recommend at least 10240 MB (10 GB), adjusted for the mods you run. "
                 "The game's memory manager grows towards this limit whether it needs the memory or not, so leave enough for Windows "
                 "and anything else running on the machine. If the console shows OutOfMemoryError, raise this."
@@ -356,7 +357,7 @@ def template_fields():
                 "AMP always wins: every sandbox box is applied each time the server starts, so changes made in game only last until a restart. "
                 "Mod sandbox settings are never touched, whichever you pick. "
                 "To make these boxes match what the game is really using, after changes in game or after bringing in a world: start the server once, "
-                "then in the File Manager right click Zomboid/Server/servertest_SandboxImport.ini (your save name in place of servertest) and choose Import. "
+                "then in the File Manager right click Zomboid/Server/servertest_SandboxImport.ini (your save name in place of servertest) and choose Import Configuration. "
                 "A world you bring in is safe: on its first start here, nothing from AMP is applied to it until you import or change a box. "
                 "Presets and mod settings: use the game's own settings editor. On your PC, open Project Zomboid, click HOST, then Manage settings, "
                 "then Create New Settings or Edit Selected Settings. Give it the same name as this server's save name. "
