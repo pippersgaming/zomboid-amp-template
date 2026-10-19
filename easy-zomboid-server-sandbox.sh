@@ -7,6 +7,7 @@ sandbox="$dir/${name}_SandboxVars.lua"
 amp="$dir/${name}_AMPSandbox.lua"
 last="$dir/${name}_AMPSandbox.last.lua"
 import="$dir/${name}_SandboxImport.ini"
+guard="$dir/${name}_AMPSandbox.guard.ini"
 [ -f "$base/Zomboid/Saves/Multiplayer/$name/map_sand.bin" ] && echo "[Sandbox] Warning: this world has a map_sand.bin file in its save folder, which single player saves make. The game reads sandbox settings from that file instead of the sandbox file, so AMP's boxes and uploaded settings will not change this world. To switch to the sandbox file: make sure it holds the settings you want, stop the server, and rename map_sand.bin to map_sand.bin.old."
 [ -f "$sandbox" ] || exit 0
 [ -f "$amp" ] || exit 0
@@ -37,6 +38,7 @@ write_import() {
         t != "" && /^        [A-Za-z0-9_]+ = .*,[ \t]*$/ { keep("SV_" t "_" $1, value($0)) }
         END { for (i = 1; i <= count; i++) print order[i] "=" val[order[i]] }
     ' > "$import"
+    cp -f "$import" "$guard"
 }
 
 if [ "$world" = 1 ] && [ ! -f "$last" ]; then
@@ -50,7 +52,7 @@ fi
 if [ "$mode" = "amp" ] || [ ! -f "$last" ]; then
     new=$(tr -d '\r' < "$amp")
 else
-    new=$(tr -d '\r' < "$amp" | grep -vxF -f <(tr -d '\r' < "$last") | IMPORTED="$import" awk "$AWK_LIB"'
+    new=$(tr -d '\r' < "$amp" | grep -vxF -f <(tr -d '\r' < "$last") | IMPORTED="$guard" awk "$AWK_LIB"'
         BEGIN { f = ENVIRON["IMPORTED"]; while ((getline line < f) > 0) { sub(/\r$/, "", line); had[line] = 1 } }
         isamp($0) && ((ampkey($0) "=" value($0)) in had) { next }
         { print }

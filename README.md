@@ -19,6 +19,11 @@ Make running a Project Zomboid server easier, with every setting checked against
 - Optional extras you can switch on or off: daily restarts, update night, chat relay, and more.
 - Clear guidance on how changes are saved and when they take effect.
 
+## Updating from an earlier version
+
+- Versions before 20 October 2026 never passed the Server save name or the Admin username to the game, so every world was saved as servertest. If you changed Server save name, set it back to servertest before the first start after updating, or the server starts a new world.
+- The Admin username now reaches the game, so it must follow the game's name rules in its help text. If it doesn't, the server stops as soon as it starts.
+
 ## Licence
 
 PolyForm Noncommercial 1.0.0, see [LICENSE.md](LICENSE.md).

@@ -300,7 +300,7 @@ def template_fields():
                 "Required. The password for your in-game admin account (the username below), not the one players use to join. "
                 "The game resets the admin account to this password every time the server starts. "
                 "Use a password you don't use anywhere else: anyone you give access to this server in AMP may be able to see it. "
-                "Don't use double quotes or backslashes in it: they break the server's start command. "
+                "Don't use double quotes in it, and don't end it with a backslash: AMP puts this password inside double quotes on the server's start command. "
                 "Every box on these pages saves when you click away from it and takes effect after a restart. "
                 "Change server settings in these boxes, not in the game's .ini file, because AMP rewrites that file from them every time the server starts."
             ),
@@ -314,7 +314,8 @@ def template_fields():
             "Category": tab, "Subcategory": start, "Order": 3,
             "Description": (
                 "The name of your in-game admin account. The game creates it on the first start. "
-                "Use 2 to 32 characters, without any of these: ; @ $ , \\ / . ' ? and double quotes. With any of them, the server stops as soon as it starts. "
+                "Use 2 to 32 characters, without any of these: ; @ $ , \\ / . ' ? and double quotes. It can't start with admin unless it is exactly admin, "
+                "and the game's bad words filter also applies. If the name breaks a rule, the server stops as soon as it starts. "
                 "If your game is started in debug mode, only admin accounts can join: others see 'Debug connection is not allowed for non admin.'"
             ),
             "Keywords": "admin,username,adminusername",
@@ -360,6 +361,7 @@ def template_fields():
                 "Mod sandbox settings are never touched, whichever you pick. "
                 "To make these boxes match what the game is really using, after changes in game or after bringing in a world: start the server once, "
                 "then in the File Manager right click Zomboid/Server/servertest_SandboxImport.ini (your save name in place of servertest) and choose Import Configuration. "
+                "A box changed back to the value the game had at the last start is skipped, so an import can't undo newer changes made in game. "
                 "A world you bring in is safe: on its first start here, nothing from AMP is applied to it until you import or change a box. "
                 "Presets and mod settings: use the game's own settings editor. On your PC, open Project Zomboid, click HOST, then Manage settings, "
                 "then Create New Settings or Edit Selected Settings. Give it the same name as this server's save name. "
@@ -446,7 +448,7 @@ def start_here_overrides(fields):
 
 
 NO_EQUALS_NOTE = "Don't use the = sign in it: the game reads only the part before the next = when it loads its settings file."
-NO_EQUALS = {"Password", "RCONPassword", "DiscordToken", "WebhookAddress", "ServerWelcomeMessage", "PublicDescription"}
+NO_EQUALS = {"Password", "RCONPassword", "DiscordToken", "WebhookAddress", "ServerWelcomeMessage", "PublicName", "PublicDescription"}
 
 
 def no_equals_notes(fields):

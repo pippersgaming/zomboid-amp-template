@@ -5,6 +5,7 @@ $sandbox = Join-Path $dir "${ServerName}_SandboxVars.lua"
 $amp = Join-Path $dir "${ServerName}_AMPSandbox.lua"
 $last = Join-Path $dir "${ServerName}_AMPSandbox.last.lua"
 $import = Join-Path $dir "${ServerName}_SandboxImport.ini"
+$guard = Join-Path $dir "${ServerName}_AMPSandbox.guard.ini"
 $importName = "${ServerName}_SandboxImport.ini"
 $sandBin = Join-Path $BaseDir "Zomboid/Saves/Multiplayer/$ServerName/map_sand.bin"
 if (Test-Path -LiteralPath $sandBin) { Write-Output "[Sandbox] Warning: this world has a map_sand.bin file in its save folder, which single player saves make. The game reads sandbox settings from that file instead of the sandbox file, so AMP's boxes and uploaded settings will not change this world. To switch to the sandbox file: make sure it holds the settings you want, stop the server, and rename map_sand.bin to map_sand.bin.old." }
@@ -46,6 +47,7 @@ function Write-Import {
     $out = New-Object 'System.Collections.Generic.List[string]'
     foreach ($k in $values.Keys) { $out.Add("$k=$($values[$k])") }
     [IO.File]::WriteAllLines($import, $out)
+    [IO.File]::WriteAllLines($guard, $out)
 }
 
 if ($isWorld -and -not (Test-Path -LiteralPath $last)) {
@@ -63,7 +65,7 @@ if ($Mode -eq 'amp' -or -not (Test-Path -LiteralPath $last)) {
     $old = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)
     foreach ($x in [IO.File]::ReadAllLines($last)) { [void]$old.Add($x) }
     $had = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)
-    if (Test-Path -LiteralPath $import) { foreach ($x in [IO.File]::ReadAllLines($import)) { [void]$had.Add($x) } }
+    if (Test-Path -LiteralPath $guard) { foreach ($x in [IO.File]::ReadAllLines($guard)) { [void]$had.Add($x) } }
     $new = @($ampLines | Where-Object {
         if ($old.Contains($_)) { return $false }
         if ($_ -match '^SandboxVars\.(\w+)(?:\.(\w+))? = (?!SandboxVars)(.*?)\s*$') {

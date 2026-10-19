@@ -25,7 +25,7 @@ foreach ($item in $items) {
     if (-not (Test-Path -LiteralPath $dir)) { $notDownloaded += $item; continue }
     $infos = @(Get-ChildItem -LiteralPath (Join-Path $dir 'mods') -Directory -ErrorAction SilentlyContinue |
         ForEach-Object { Get-ChildItem -LiteralPath $_.FullName -Directory -ErrorAction SilentlyContinue } |
-        Where-Object { $_.Name -eq 'common' -or $_.Name -match '^42(\.\d+)*$' } |
+        Where-Object { $_.Name -eq 'common' -or $_.Name -match '^42(\..*)?$' } |
         ForEach-Object { Join-Path $_.FullName 'mod.info' } | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf })
     $ids = @($infos | ForEach-Object { [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes($_)) -split "`r?`n" } |
         Where-Object { $_ -cmatch '^id=(.+)$' } | ForEach-Object { $Matches[1].Trim() } | Where-Object { $_ -ne '' } | Sort-Object -Unique)
