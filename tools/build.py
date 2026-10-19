@@ -213,7 +213,7 @@ def setting_fields(rows):
                 "DisplayName": key, "Category": tab, "Subcategory": sub,
                 "Description": "Set from the ports AMP gives this instance.",
                 "FieldName": PORT_FIELDS[key], "ParamFieldName": key,
-                "InputType": "hidden", "IncludeInCommandLine": False, "DefaultValue": r["default"],
+                "InputType": "hidden", "IncludeInCommandLine": False, "ExcludeFromImport": True, "DefaultValue": r["default"],
             })
             continue
         if not is_sandbox and key == "MaxPlayers":
@@ -286,7 +286,7 @@ def template_fields():
                 "The message everyone in game sees when the server finds a Workshop mod update. "
                 "The server only checks when it's told to: in AMP, open Schedule and add a task that sends the console command "
                 "checkModsNeedUpdate every 10 or 15 minutes. Players who already have the new version can't join until the server restarts, "
-                "so restart when it suits you. Leave this empty to send no message."
+                "so restart when it suits you. Leave this empty to send no message. Don't use double quotes in it, or the message isn't sent."
             ),
             "Keywords": "mod,update,workshop,warning,restart,checkmodsneedupdate",
             "FieldName": "ModUpdateMessage", "ParamFieldName": "ModUpdateMessage",
@@ -300,6 +300,7 @@ def template_fields():
                 "Required. The password for your in-game admin account (the username below), not the one players use to join. "
                 "The game resets the admin account to this password every time the server starts. "
                 "Use a password you don't use anywhere else: anyone you give access to this server in AMP may be able to see it. "
+                "Don't use double quotes or backslashes in it: they break the server's start command. "
                 "Every box on these pages saves when you click away from it and takes effect after a restart. "
                 "Change server settings in these boxes, not in the game's .ini file, because AMP rewrites that file from them every time the server starts."
             ),
@@ -313,6 +314,7 @@ def template_fields():
             "Category": tab, "Subcategory": start, "Order": 3,
             "Description": (
                 "The name of your in-game admin account. The game creates it on the first start. "
+                "Use 2 to 32 characters, without any of these: ; @ $ , \\ / . ' ? and double quotes. With any of them, the server stops as soon as it starts. "
                 "If your game is started in debug mode, only admin accounts can join: others see 'Debug connection is not allowed for non admin.'"
             ),
             "Keywords": "admin,username,adminusername",
@@ -443,6 +445,18 @@ def start_here_overrides(fields):
             })
 
 
+NO_EQUALS_NOTE = "Don't use the = sign in it: the game reads only the part before the next = when it loads its settings file."
+NO_EQUALS = {"Password", "RCONPassword", "DiscordToken", "WebhookAddress", "ServerWelcomeMessage", "PublicDescription"}
+
+
+def no_equals_notes(fields):
+    for f in fields:
+        if f.get("ParamFieldName") in NO_EQUALS and NO_EQUALS_NOTE not in f["Description"]:
+            text = f["Description"].rstrip()
+            cut = text.find(" In the settings file: ")
+            f["Description"] = text + " " + NO_EQUALS_NOTE if cut < 0 else text[:cut] + " " + NO_EQUALS_NOTE + text[cut:]
+
+
 def mods_notes(fields):
     notes = {
         "Mods": (
@@ -565,6 +579,7 @@ def main():
     fields, lua_lines = setting_fields(rows)
     mods_notes(fields)
     start_here_overrides(fields)
+    no_equals_notes(fields)
     fields = template_fields() + fields
     tables = sorted({r["table_path"].split(".")[1] for r in rows
                      if r["file"] == "SandboxVars" and r["table_path"].count(".") > 1})
