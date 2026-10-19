@@ -23,9 +23,12 @@ $warnings = @()
 foreach ($item in $items) {
     $dir = Join-Path $content $item
     if (-not (Test-Path -LiteralPath $dir)) { $notDownloaded += $item; continue }
-    $ids = @(Get-ChildItem -LiteralPath $dir -Recurse -Filter 'mod.info' -File -ErrorAction SilentlyContinue |
-        ForEach-Object { Get-Content -LiteralPath $_.FullName -ErrorAction SilentlyContinue } |
-        Where-Object { $_ -match '^id=(.+)$' } | ForEach-Object { $Matches[1].Trim() } | Sort-Object -Unique)
+    $infos = @(Get-ChildItem -LiteralPath (Join-Path $dir 'mods') -Directory -ErrorAction SilentlyContinue |
+        ForEach-Object { Get-ChildItem -LiteralPath $_.FullName -Directory -ErrorAction SilentlyContinue } |
+        Where-Object { $_.Name -eq 'common' -or $_.Name -match '^42(\.\d+)*$' } |
+        ForEach-Object { Join-Path $_.FullName 'mod.info' } | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf })
+    $ids = @($infos | ForEach-Object { [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes($_)) -split "`r?`n" } |
+        Where-Object { $_ -cmatch '^id=(.+)$' } | ForEach-Object { $Matches[1].Trim() } | Where-Object { $_ -ne '' } | Sort-Object -Unique)
     foreach ($id in $ids) { [void]$allIds.Add($id) }
     if ($ids.Count -gt 0 -and -not ($ids | Where-Object { $wanted.Contains($_) })) {
         $warnings += "Workshop item $item is listed, but none of its mods are in Mods. Its mod IDs: $($ids -join ', ')."

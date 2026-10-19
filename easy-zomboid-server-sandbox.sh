@@ -14,18 +14,23 @@ import="$dir/${name}_SandboxImport.ini"
 world=0
 grep -q '^    ZombieLore = {' "$sandbox" && world=1
 
+AWK_LIB='
+function clean(v) {
+    if (v ~ /^".*"$/) { v = substr(v, 2, length(v) - 2); gsub(/\\"/, "\"", v); gsub(/\\\\/, "\\", v) }
+    else if (v ~ /^\[==\[.*\]==\]$/) { v = substr(v, 5, length(v) - 8) }
+    return v
+}
+function value(line) { v = substr(line, index(line, " = ") + 3); sub(/,?[ \t]*$/, "", v); return clean(v) }
+function ampkey(line) { k = substr(line, 1, index(line, " = ") - 1); sub(/^SandboxVars\./, "SV_", k); sub(/\./, "_", k); return k }
+function isamp(line) { return line ~ /^SandboxVars\.[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)? = / && line !~ / = SandboxVars/ }
+'
+
 write_import() {
     known=$(tr -d '\r' < "$amp" | grep -E '^SandboxVars\.[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)? = ' | grep -v ' = SandboxVars' | cut -d' ' -f1 | sed 's/^SandboxVars\./SV_/; s/\./_/')
-    tr -d '\r' < "$sandbox" | awk -v known="$known" '
-        BEGIN { n = split(known, list, "\n"); for (i = 1; i <= n; i++) ok[list[i]] = 1 }
-        function clean(v) {
-            if (v ~ /^".*"$/) { v = substr(v, 2, length(v) - 2); gsub(/\\"/, "\"", v); gsub(/\\\\/, "\\", v) }
-            else if (v ~ /^\[==\[.*\]==\]$/) { v = substr(v, 5, length(v) - 8) }
-            return v
-        }
-        function value(line) { v = substr(line, index(line, " = ") + 3); sub(/,?[ \t]*$/, "", v); return clean(v) }
+    tr -d '\r' < "$sandbox" | KNOWN="$known" awk "$AWK_LIB"'
+        BEGIN { n = split(ENVIRON["KNOWN"], list, "\n"); for (i = 1; i <= n; i++) ok[list[i]] = 1 }
         function keep(k, v) { if (!(k in ok)) return; if (!(k in seen)) { seen[k] = 1; order[++count] = k } val[k] = v }
-        /^SandboxVars\.[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)? = / && !/ = SandboxVars/ { k = $1; sub(/^SandboxVars\./, "SV_", k); sub(/\./, "_", k); keep(k, value($0)); next }
+        isamp($0) { keep(ampkey($0), value($0)); next }
         /^    [A-Za-z0-9_]+ = \{[ \t]*$/ { t = $1; next }
         /^    \},?[ \t]*$/ { t = ""; next }
         t == "" && /^    [A-Za-z0-9_]+ = .*,[ \t]*$/ { keep("SV_" $1, value($0)); next }
@@ -42,12 +47,16 @@ if [ "$world" = 1 ] && [ ! -f "$last" ]; then
     exit 0
 fi
 
-echo >> "$sandbox"
 if [ "$mode" = "amp" ] || [ ! -f "$last" ]; then
-    cat "$amp" >> "$sandbox"
+    new=$(tr -d '\r' < "$amp")
 else
-    grep -vxF -f "$last" "$amp" >> "$sandbox"
+    new=$(tr -d '\r' < "$amp" | grep -vxF -f <(tr -d '\r' < "$last") | IMPORTED="$import" awk "$AWK_LIB"'
+        BEGIN { f = ENVIRON["IMPORTED"]; while ((getline line < f) > 0) { sub(/\r$/, "", line); had[line] = 1 } }
+        isamp($0) && ((ampkey($0) "=" value($0)) in had) { next }
+        { print }
+    ')
 fi
+[ -n "$new" ] && printf '\n%s\n' "$new" >> "$sandbox"
 cp -f "$amp" "$last"
 [ "$world" = 1 ] && write_import
 exit 0

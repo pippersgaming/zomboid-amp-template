@@ -62,7 +62,16 @@ if ($Mode -eq 'amp' -or -not (Test-Path -LiteralPath $last)) {
 } else {
     $old = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)
     foreach ($x in [IO.File]::ReadAllLines($last)) { [void]$old.Add($x) }
-    $new = @($ampLines | Where-Object { -not $old.Contains($_) })
+    $had = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)
+    if (Test-Path -LiteralPath $import) { foreach ($x in [IO.File]::ReadAllLines($import)) { [void]$had.Add($x) } }
+    $new = @($ampLines | Where-Object {
+        if ($old.Contains($_)) { return $false }
+        if ($_ -match '^SandboxVars\.(\w+)(?:\.(\w+))? = (?!SandboxVars)(.*?)\s*$') {
+            if ($Matches[2]) { $key = "SV_$($Matches[1])_$($Matches[2])" } else { $key = "SV_$($Matches[1])" }
+            if ($had.Contains("$key=$(Clean-Value $Matches[3])")) { return $false }
+        }
+        return $true
+    })
 }
 if ($new.Count -gt 0) {
     $nl = [Environment]::NewLine

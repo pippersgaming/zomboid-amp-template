@@ -8,8 +8,8 @@ split_list() {
     tr -d '\\\r' | tr ';' '\n' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//' | grep -v '^$'
 }
 
-mods=$(grep -m1 '^Mods=' "$ini" | cut -d= -f2- | split_list)
-items=$(grep -m1 '^WorkshopItems=' "$ini" | cut -d= -f2- | split_list)
+mods=$(grep '^Mods=' "$ini" | tail -n 1 | cut -d= -f2- | split_list)
+items=$(grep '^WorkshopItems=' "$ini" | tail -n 1 | cut -d= -f2- | split_list)
 content="$base/steamapps/workshop/content/108600"
 all_ids=$(mktemp)
 warnings=$(mktemp)
@@ -22,7 +22,7 @@ while IFS= read -r item; do
         not_downloaded="${not_downloaded:+$not_downloaded, }$item"
         continue
     fi
-    ids=$(find "$dir" -type f -name mod.info -exec grep -h '^id=' {} + 2>/dev/null | cut -d= -f2- | tr -d '\r' | sed 's/[[:space:]]*$//' | sort -u)
+    ids=$(for f in "$dir"/mods/*/common/mod.info "$dir"/mods/*/42/mod.info "$dir"/mods/*/42.*/mod.info; do [ -f "$f" ] && grep -h '^id=' "$f"; done | cut -d= -f2- | tr -d '\r' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//' | grep -v '^$' | sort -u)
     printf '%s\n' "$ids" >> "$all_ids"
     if [ -n "$ids" ] && ! printf '%s\n' "$ids" | grep -qxF -f <(printf '%s\n' "$mods"); then
         echo "Workshop item $item is listed, but none of its mods are in Mods. Its mod IDs: $(printf '%s' "$ids" | paste -sd, - | sed 's/,/, /g')." >> "$warnings"
