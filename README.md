@@ -23,6 +23,17 @@ Make running a Project Zomboid server easier, with every setting checked against
 
 - Versions before 20 October 2026 never passed the Server save name or the Admin username to the game, so every world was saved as servertest. If you changed Server save name, set it back to servertest before the first start after updating, or the server starts a new world.
 - The Admin username now reaches the game, so it must follow the game's name rules in its help text. If it doesn't, the server stops as soon as it starts.
+- From 24 October 2026 the server won't start with a Server save name that has anything other than letters, numbers, dashes or underscores, or that starts with a dash. Clicking Update downloads this check even on an instance that keeps an older template version. If your world's name breaks this rule, keep it running as it is and don't click Update.
+
+## Known limits
+
+Things that don't work fully yet, most of them decided by the game or by AMP.
+
+- Updating an instance you already have to a newer template version doesn't work yet: AMP stores this template's source for the instance as "--main". A new instance gets the newest version.
+- AMP's player list can keep showing a player whose display name differs from their username, for example after an admin changes it. The game prints the username when a player joins and the display name when they leave.
+- Unbanning with unbanuser also sets the account's access level back to user.
+- If you press Stop while the server is still starting, AMP waits up to 60 seconds before it stops it.
+- The mod list check counts a mod as found even when its mod.info is only in a folder for a newer game version than yours.
 
 ## Licence
 

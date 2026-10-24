@@ -1,5 +1,21 @@
 [
     {
+        "UpdateStageName": "Check save name",
+        "UpdateSourcePlatform": "Windows",
+        "UpdateSource": "Executable",
+        "UpdateSourceData": "powershell.exe",
+        "UpdateSourceArgs": "-NoProfile -ExecutionPolicy Bypass -File \"{{$FullRootDir}}easy-zomboid-server-sandbox.ps1\" \"{{$FullBaseDir}}.\" \"{{servername}}\" \"check\"",
+        "SkipOnFailure": false
+    },
+    {
+        "UpdateStageName": "Check save name",
+        "UpdateSourcePlatform": "Linux",
+        "UpdateSource": "Executable",
+        "UpdateSourceData": "/bin/bash",
+        "UpdateSourceArgs": "\"{{$FullRootDir}}easy-zomboid-server-sandbox.sh\" \"{{$FullBaseDir}}.\" \"{{servername}}\" \"check\"",
+        "SkipOnFailure": false
+    },
+    {
         "UpdateStageName": "Create settings folder",
         "UpdateSourcePlatform": "All",
         "UpdateSource": "CreateDirectory",

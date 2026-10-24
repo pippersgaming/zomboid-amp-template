@@ -314,8 +314,8 @@ def template_fields():
             "Category": tab, "Subcategory": start, "Order": 3,
             "Description": (
                 "The name of your in-game admin account. The game creates it on the first start. "
-                "Use 2 to 32 characters, without any of these: ; @ $ , \\ / . ' ? and double quotes. It can't start with admin unless it is exactly admin, "
-                "and the game's bad words filter also applies. If the name breaks a rule, the server stops as soon as it starts. "
+                "Use 2 to 32 characters, without any of these: ; @ $ , \\ / . ' ? and double quotes. It can't start with admin, in capitals or not, unless it is exactly admin. "
+                "If the name breaks a rule, the server stops as soon as it starts. "
                 "If your game is started in debug mode, only admin accounts can join: others see 'Debug connection is not allowed for non admin.'"
             ),
             "Keywords": "admin,username,adminusername",
@@ -329,7 +329,7 @@ def template_fields():
             "Description": (
                 "The name the game uses for this server's settings files and world. "
                 "Changing this starts a brand new world with fresh settings files. The old world stays on disk under its old name. "
-                "Use letters, numbers, dashes or underscores only."
+                "Use letters, numbers, dashes or underscores only, and don't start it with a dash: with anything else the server won't start, and the console says why."
             ),
             "Keywords": "server,name,servername,world,save",
             "FieldName": "servername", "ParamFieldName": "servername",
@@ -494,6 +494,28 @@ SANDBOX_STARTER ="SandboxVars = {\n    VERSION = 6,\n}\n"
 def starter_stages(rows):
     server_dir = "{{$FullBaseDir}}Zomboid/Server"
     return [
+        {
+            "UpdateStageName": "Check save name",
+            "UpdateSourcePlatform": "Windows",
+            "UpdateSource": "Executable",
+            "UpdateSourceData": "powershell.exe",
+            "UpdateSourceArgs": (
+                f"-NoProfile -ExecutionPolicy Bypass -File \"{{{{$FullRootDir}}}}{NAME}-sandbox.ps1\" "
+                "\"{{$FullBaseDir}}.\" \"{{servername}}\" \"check\""
+            ),
+            "SkipOnFailure": False,
+        },
+        {
+            "UpdateStageName": "Check save name",
+            "UpdateSourcePlatform": "Linux",
+            "UpdateSource": "Executable",
+            "UpdateSourceData": "/bin/bash",
+            "UpdateSourceArgs": (
+                f"\"{{{{$FullRootDir}}}}{NAME}-sandbox.sh\" "
+                "\"{{$FullBaseDir}}.\" \"{{servername}}\" \"check\""
+            ),
+            "SkipOnFailure": False,
+        },
         {
             "UpdateStageName": "Create settings folder",
             "UpdateSourcePlatform": "All",

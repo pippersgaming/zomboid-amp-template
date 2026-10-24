@@ -2,6 +2,14 @@
 base="$1"
 name="$2"
 mode="$3"
+case "$mode" in
+    both|amp|check) ;;
+    *) name="" ;;
+esac
+case "$name" in
+    ''|-*|*[!A-Za-z0-9_-]*) echo "[Sandbox] The Server save name can't be used. Use letters, numbers, dashes or underscores only, and don't start it with a dash: Configuration, Server tab, Start here."; exit 1 ;;
+esac
+[ "$mode" = "check" ] && exit 0
 dir="$base/Zomboid/Server"
 sandbox="$dir/${name}_SandboxVars.lua"
 amp="$dir/${name}_AMPSandbox.lua"
@@ -14,12 +22,33 @@ guard="$dir/${name}_AMPSandbox.guard.ini"
 
 world=0
 grep -q '^    ZombieLore = {' "$sandbox" && world=1
+stub=0
+if [ "$world" = 0 ] && ! tr -d '\r' < "$sandbox" | grep -vE '^[[:space:]]*$|^[[:space:]]*--|^SandboxVars = \{[[:space:]]*$|^[[:space:]]*VERSION = [0-9]+,[[:space:]]*$|^\}[[:space:]]*$|^SandboxVars\.[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)? = ' | grep -q .; then
+    stub=1
+fi
 
 AWK_LIB='
-function clean(v) {
+function clean(v,   n, c) {
     if (v ~ /^".*"$/) { v = substr(v, 2, length(v) - 2); gsub(/\\"/, "\"", v); gsub(/\\\\/, "\\", v) }
-    else if (v ~ /^\[==\[.*\]==\]$/) { v = substr(v, 5, length(v) - 8) }
+    else if (match(v, /^\[=*\[/)) {
+        n = RLENGTH; c = "]" substr(v, 2, n - 2) "]"
+        if (length(v) >= 2 * n && substr(v, length(v) - n + 1) == c) v = substr(v, n + 1, length(v) - 2 * n)
+    }
     return v
+}
+function norm(v) {
+    if (v ~ /^-?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?$/) v = sprintf("%.17g", v + 0)
+    return v
+}
+function setkey(line) { return line ~ /^SandboxVars\.[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)? = / ? substr(line, 1, index(line, " = ") - 1) : "" }
+function fixb(line,   h, v, eq) {
+    if (line !~ /^SandboxVars\.[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)? = \[==\[.*\]==\][ \t]*$/) return line
+    h = substr(line, 1, index(line, " = ") + 2)
+    v = substr(line, length(h) + 1); sub(/[ \t]*$/, "", v); v = substr(v, 5, length(v) - 8)
+    eq = "=="
+    while (index(v, "]" eq "]") || (length(v) > length(eq) && substr(v, length(v) - length(eq)) == "]" eq)) eq = eq "="
+    if (eq == "==") return line
+    return h "[" eq "[" v "]" eq "]"
 }
 function value(line) { v = substr(line, index(line, " = ") + 3); sub(/,?[ \t]*$/, "", v); return clean(v) }
 function ampkey(line) { k = substr(line, 1, index(line, " = ") - 1); sub(/^SandboxVars\./, "SV_", k); sub(/\./, "_", k); return k }
@@ -53,12 +82,28 @@ if [ "$mode" = "amp" ] || [ ! -f "$last" ]; then
     new=$(tr -d '\r' < "$amp")
 else
     new=$(tr -d '\r' < "$amp" | grep -vxF -f <(tr -d '\r' < "$last") | IMPORTED="$guard" awk "$AWK_LIB"'
-        BEGIN { f = ENVIRON["IMPORTED"]; while ((getline line < f) > 0) { sub(/\r$/, "", line); had[line] = 1 } }
-        isamp($0) && ((ampkey($0) "=" value($0)) in had) { next }
+        BEGIN { f = ENVIRON["IMPORTED"]; while ((getline line < f) > 0) { sub(/\r$/, "", line); i = index(line, "="); if (i > 1) had[substr(line, 1, i) norm(substr(line, i + 1))] = 1 } }
+        isamp($0) && ((ampkey($0) "=" norm(value($0))) in had) { next }
         { print }
     ')
 fi
+if [ "$stub" = 1 ]; then
+    new=$(tr -d '\r' < "$amp" | CHOSEN="$new" CURRENT="$sandbox" awk "$AWK_LIB"'
+        BEGIN {
+            n = split(ENVIRON["CHOSEN"], c, "\n"); for (i = 1; i <= n; i++) chosen[c[i]] = 1
+            f = ENVIRON["CURRENT"]; while ((getline line < f) > 0) { sub(/\r$/, "", line); k = setkey(line); if (k != "") isset[k] = 1 }
+        }
+        ($0 in chosen) || (setkey($0) != "" && !(setkey($0) in isset))
+    ')
+fi
+if [ -n "$new" ]; then
+    new=$(printf '%s\n' "$new" | CURRENT="$sandbox" awk "$AWK_LIB"'
+        BEGIN { f = ENVIRON["CURRENT"]; while ((getline line < f) > 0) { sub(/\r$/, "", line); sub(/[ \t]+$/, "", line); k = setkey(line); if (k != "") cur[k] = line } }
+        { l = fixb($0); t = l; sub(/[ \t]+$/, "", t); k = setkey(t); if (k != "" && (k in cur) && cur[k] == t) next; print l }
+    ')
+fi
 [ -n "$new" ] && printf '\n%s\n' "$new" >> "$sandbox"
+[ "$stub" = 1 ] && rm -f "$guard" "$import"
 cp -f "$amp" "$last"
 [ "$world" = 1 ] && write_import
 exit 0
