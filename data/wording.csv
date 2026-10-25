@@ -118,15 +118,15 @@ MultiplayerStatisticsPeriod,Multiplayer stats interval (seconds),"How often, in 
 MaxPacketsPerSecond,Packet limit per second,"The most packets of any one kind a player's game sends each second. Past the limit their game skips the extra packets, while the server only notes it in its debug log and doesn't kick anyone."
 UsePhysicsHitReaction,Ragdoll hit reactions,The game doesn't use this in 42.21. Ragdolls are switched off on every multiplayer server and client before this is checked.
 BanKickGlobalSound,Thunder on ban or kick,On: everyone hears thunder when staff ban or kick a player who's online. Automatic bans and kicks by the anti-cheat or the banned word filter don't play it.
-AntiCheatSafety,Anti-cheat: PvP safety,"What the server does when it catches someone breaking the PvP safety rules: ban, kick, log only, or nothing (Disabled)."
-AntiCheatSpeed,Anti-cheat: speed,"What the server does when a player or vehicle moves faster than allowed: ban, kick, log only, or nothing (Disabled)."
-AntiCheatNoClip,Anti-cheat: walking through walls,"What the server does when a player walks through walls: ban, kick, log only, or nothing (Disabled). This is Disabled by default."
-AntiCheatHit,Anti-cheat: impossible hits,"What the server does about impossible hits (damage, distance, weapon and vehicle hits): ban, kick, log only, or nothing (Disabled)."
+AntiCheatSafety,Anti-cheat: PvP safety,"What the server does when it catches someone breaking the PvP safety rules: ban, kick, log, or nothing (Disabled). Log still stops the action, it just doesn't ban or kick anyone."
+AntiCheatSpeed,Anti-cheat: speed,"What the server does when a player or vehicle moves faster than allowed: ban, kick, log, or nothing (Disabled). Log still stops the action, it just doesn't ban or kick anyone."
+AntiCheatNoClip,Anti-cheat: walking through walls,"What the server does when a player walks through walls: ban, kick, log, or nothing (Disabled). Log still undoes the move and sends the player back, so anything that teleports players, like an RV interior mod, needs this Disabled. This is Disabled by default."
+AntiCheatHit,Anti-cheat: impossible hits,"What the server does about impossible hits (damage, distance, weapon and vehicle hits): ban, kick, log, or nothing (Disabled). Log still stops the action, it just doesn't ban or kick anyone."
 AntiCheatPacketException,Anti-cheat: bad network messages,"What the server does about broken or unexpected network messages: ban, kick, log only, or nothing (Disabled). This is Disabled by default."
-AntiCheatPermission,Anti-cheat: role powers,"What the server does when someone uses powers their role doesn't have: ban, kick, log only, or nothing (Disabled)."
+AntiCheatPermission,Anti-cheat: role powers,"What the server does when someone uses powers their role doesn't have: ban, kick, log, or nothing (Disabled). Log still stops the action, it just doesn't ban or kick anyone."
 AntiCheatXP,Anti-cheat: skill XP,"What the server does about impossible skill XP gains: ban, kick, log only, or nothing (Disabled). The allowed amount follows the XP multiplier settings."
-AntiCheatSafeHouse,Anti-cheat: safehouse actions,"What the server does about invalid safehouse actions (by owners, members or non-members): ban, kick, log only, or nothing (Disabled)."
-AntiCheatPlayer,Anti-cheat: player data,"What the server does about invalid player data or targets: ban, kick, log only, or nothing (Disabled)."
+AntiCheatSafeHouse,Anti-cheat: safehouse actions,"What the server does about invalid safehouse actions (by owners, members or non-members): ban, kick, log, or nothing (Disabled). Log still stops the action, it just doesn't ban or kick anyone."
+AntiCheatPlayer,Anti-cheat: player data,"What the server does about invalid player data or targets: ban, kick, log, or nothing (Disabled). Log still stops the action, it just doesn't ban or kick anyone."
 AntiCheatChecksum,Anti-cheat: file check,"What the server does when a player's game files still don't match the server's 60 seconds after the file check: ban, kick, log only, or nothing (Disabled). It only applies while the file check setting is on."
 DisableScoreboard,Hide other players in list,On: the player list hides other players from each player.
 HideAdminsInPlayerList,Hide staff in player list,On: staff whose role allows hiding are left out of the player list.
